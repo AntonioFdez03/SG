@@ -1,6 +1,6 @@
 import * as THREE from '../libs/three.module.js'
  
-class MyBox extends THREE.Object3D {
+class MyIcosaedro extends THREE.Object3D {
   constructor(gui,titleGui) {
     super();
     
@@ -9,19 +9,20 @@ class MyBox extends THREE.Object3D {
     this.createGUI(gui,titleGui);
     
     // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (1,1,1);
+    var icosahedronGeom = new THREE.IcosahedronGeometry (1,1,1);
     // Como material se crea uno a partir de un color
-    var boxMat = new THREE.MeshStandardMaterial({color: 0xCF0000});
+    var icosahedroMat = new THREE.MeshStandardMaterial({color: 0xCF0000});
     
     // Ya podemos construir el Mesh
-    var box = new THREE.Mesh (boxGeom, boxMat);
+    var icosahedron = new THREE.Mesh (icosahedronGeom, icosahedroMat);
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (box);
+    this.add (icosahedron);
     
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
-    box.position.y = 0.5;
+    icosahedron.position.y = 0.5;
+    icosahedron.position.x = 5;
   }
   
   createGUI (gui,titleGui) {
@@ -90,4 +91,4 @@ class MyBox extends THREE.Object3D {
   }
 }
 
-export { MyBox };
+export { MyIcosaedro};

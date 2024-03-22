@@ -11,6 +11,7 @@ import { Stats } from '../libs/stats.module.js'
 import { MyBox } from './MyBox.js'
 import { MyTorus} from './MyTorus.js'
 import { MyCone} from './MyCone.js'
+import { MyIcosaedro } from './MyIcosaedro.js'
 
  
 /// La clase fachada del modelo
@@ -55,6 +56,7 @@ class MyScene extends THREE.Scene {
     this.models.push(new MyBox(this.gui, "Controles de la Caja"));
     this.models.push(new MyCone(this.gui, "Controles del Cono"));
     this.models.push(new MyTorus(this.gui, "Controles del Toro"));
+    this.models.push(new MyIcosaedro(this.gui, "Controles del Icosaedro"));
     this.models.forEach(model => this.add(model));
   
   }
