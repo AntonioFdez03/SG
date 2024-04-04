@@ -8,6 +8,7 @@ class MyFicha extends THREE.Object3D {
     this.createGUI(gui,titleGui);
     
     this.points = [];
+    
     // Añadir los puntos que forman la base rectangular del peón
     this.points.push(new THREE.Vector2(0, -0.5));
     this.points.push(new THREE.Vector2(0.2, 0.3));
