@@ -9,13 +9,16 @@ class MyFicha extends THREE.Object3D {
     
     this.points = [];
     // Añadir los puntos que forman la base rectangular del peón
-    this.points.push(new THREE.Vector2(0, 0.2));
-    this.points.push(new THREE.Vector2(0.3, 0.2));
-    this.points.push(new THREE.Vector2(0.3, 0.4));
+    this.points.push(new THREE.Vector2(0, -0.5));
+    this.points.push(new THREE.Vector2(0.2, 0.3));
+    this.points.push(new THREE.Vector2(0.7, 0.2));
+    this.points.push(new THREE.Vector2(0.5, 0.4));
+    this.points.push(new THREE.Vector2(0.2, 0.6));
+    this.points.push(new THREE.Vector2(0, 1));
 
-    for (let i = -1; i <= Math.PI / 2; i += Math.PI / 20) {
+    /*for (let i = -1; i <= Math.PI / 2; i += Math.PI / 20) {
       this.points.push(new THREE.Vector2(0.2 * Math.cos(i), 0.2 * Math.sin(i) + 1)); // Aumenta la coordenada y
-    }
+    }*/
     
     
     // Crear la geometría de la línea
