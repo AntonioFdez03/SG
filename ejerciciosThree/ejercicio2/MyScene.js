@@ -9,7 +9,7 @@ import { Stats } from '../libs/stats.module.js'
 // Clases de mi proyecto
 
 import { MyBox } from './MyBox.js'
-import { MyTorus} from './MyTorus.js'
+import { MyToro} from './MyToro.js'
 import { Mycono} from './MyCone.js'
 import { MyIcosaedro } from './MyIcosaedro.js'
 import { MyCilindro } from './MyCilindre.js'
@@ -57,7 +57,7 @@ class MyScene extends THREE.Scene {
     this.models = [];
     this.models.push(new MyBox(this.gui, "Controles de la Caja"));
     this.models.push(new Mycono(this.gui, "Controles del Cono"));
-    this.models.push(new MyTorus(this.gui, "Controles del Toro"));
+    this.models.push(new MyToro(this.gui, "Controles del Toro"));
     this.models.push(new MyIcosaedro(this.gui, "Controles del Icosaedro"));
     this.models.push(new MyCilindro(this.gui, "Controles del Cilindro"));
     this.models.push(new MyEsfera(this.gui, "Controles de la Esfera"));

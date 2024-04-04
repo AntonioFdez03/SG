@@ -1,6 +1,6 @@
 import * as THREE from '../libs/three.module.js'
  
-class MyIcosaedro extends THREE.Object3D {
+class MyToro extends THREE.Object3D {
   constructor(gui,titleGui) {
     super();
     
@@ -9,22 +9,24 @@ class MyIcosaedro extends THREE.Object3D {
     this.createGUI(gui,titleGui);
     
     // Un Mesh se compone de geometría y material
-    var icosaedroGeom = new THREE.IcosahedronGeometry ();
+    var toroGeom = new THREE.TorusGeometry ();
     // Como material se crea uno a partir de un color
-    var icosaedroMat = new THREE.MeshStandardMaterial({color: '#808080'});
+    var toroMat = new THREE.MeshStandardMaterial({color: '#808080'});
     
     // Ya podemos construir el Mesh
-    var icosaedro = new THREE.Mesh (icosaedroGeom, icosaedroMat);
+    var toro = new THREE.Mesh (toroGeom, toroMat);
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (icosaedro);
+    this.add (toro);
     
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
-    icosaedro.position.x = 2.5;
+    toro.position.y = 3;
+    toro.position.x = 2.5;
 
     // Crear ejes para este modelo
     this.axis = new THREE.AxesHelper (1.5);
+    this.axis.position.y = 3;
     this.axis.position.x = 2.5;
     this.add (this.axis);
 
@@ -32,23 +34,29 @@ class MyIcosaedro extends THREE.Object3D {
   
   createGUI (gui,titleGui) {
     this.guiControls = {
-        radio: 1.0,
-        subdivision: 0,
+        radioPrincipal: 1.0,
+        radioTubo: 0.2,
+        resToro: 3,
+        resTubo: 3,
         reset: () => {
-            this.guiControls.radio = 1.0;
-            this.guiControls.subdivision = 0;
+            this.guiControls.radioPrincipal = 1.0;
+            this.guiControls.radioTubo = 0.2;
+            this.guiControls.resToro = 3;
+            this.guiControls.resTubo = 3;
         }
     }
 
     var folder = gui.addFolder (titleGui);
-    folder.add (this.guiControls, 'radio', 1, 2.0, 0.01).name ('Radio : ').listen();
-    folder.add (this.guiControls, 'subdivision', 0, 5, 1).name ('Subdivision : ').listen();
+    folder.add (this.guiControls, 'radioPrincipal', 1, 1.5, 0.01).name ('Radio Principal : ').listen();
+    folder.add (this.guiControls, 'radioTubo', 0.2, 1.0, 0.01).name ('Radio Tubo : ').listen();
+    folder.add (this.guiControls, 'resToro', 3, 30, 1).name ('Res. Toro : ').listen();
+    folder.add (this.guiControls, 'resTubo', 3, 30, 1).name ('Res. Tubo : ').listen();
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
   }
 
   update () {
-      var icosaedroGeom = new THREE.IcosahedronGeometry(this.guiControls.radio, this.guiControls.subdivision);
-      this.children[0].geometry = icosaedroGeom;
+      var toroGeom = new THREE.TorusGeometry(this.guiControls.radioPrincipal, this.guiControls.radioTubo, this.guiControls.resToro, this.guiControls.resTubo);
+      this.children[0].geometry = toroGeom;
 
       this.children[0].rotation.x += 0.005;
       this.children[0].rotation.y += 0.005;
@@ -56,4 +64,4 @@ class MyIcosaedro extends THREE.Object3D {
   }
 }
 
-export { MyIcosaedro };
+export { MyToro };
