@@ -9,7 +9,7 @@ import { Stats } from '../libs/stats.module.js'
 // Clases de mi proyecto
 
 
-import {MyFicha} from './MyFicha.js'
+import {MyCora} from './MyCora.js'
 
  
 /// La clase fachada del modelo
@@ -52,7 +52,7 @@ class MyScene extends THREE.Scene {
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
     this.models = [];
   
-    this.models.push(new MyFicha(this.gui, "Controles de la Ficha"));
+    this.models.push(new MyCora(this.gui, "Controles de la Ficha"));
     this.models.forEach(model => this.add(model));
   
   }
