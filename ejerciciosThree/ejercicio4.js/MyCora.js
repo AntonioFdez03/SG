@@ -10,18 +10,22 @@ class MyCora extends THREE.Object3D {
     const x = 0, y = 0;
     const heartShape = new THREE.Shape();
 
-    heartShape.moveTo(x + 5, y + 5);
-    heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
-    heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
-    heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
-    heartShape.bezierCurveTo(x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7);
-    heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
-    heartShape.bezierCurveTo(x + 7, y, x + 5, y + 5, x + 5, y + 5);
+    heartShape.moveTo(x, y);
+
+    heartShape.lineTo(x, y + 2);
+    
+    heartShape.bezierCurveTo(x + 0.5, y + 0.5, x + 1, y + 1, x + 1.5, y + 1.5);
+    heartShape.bezierCurveTo(x + 1.5, y + 2, x + 1, y + 2.5, x , y + 2);
+    heartShape.bezierCurveTo(x - 1, y + 2.5, x + -1.5, y + 2, x -1.5, y + 1.5);
+    heartShape.bezierCurveTo(x - 1, y + 1, x - 0.5, y + 0.5, x , y);
+
+    
+    
 
     // Crear la geometría extruida
     const extrudeSettings = {
-      steps: 2,
-      depth: 2,
+      steps: 1,
+      depth: 1,
       bevelEnabled: true,
       bevelThickness: 1,
       bevelSize: 1,
@@ -31,11 +35,13 @@ class MyCora extends THREE.Object3D {
     const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
 
     // Crear el material
-    const material = new THREE.MeshNormalMaterial({color: 0x00ff00});
+    const material = new THREE.MeshNormalMaterial({color: 0xff0000});
 
     // Crear la malla y añadirla a la escena
-    const heart = new THREE.Mesh(geometry, material);
-    this.add(heart);
+    const MyHeart = new THREE.Mesh(geometry, material);
+    this.add(MyHeart);
+
+  
   }
 
   createGUI (gui,titleGui) {
