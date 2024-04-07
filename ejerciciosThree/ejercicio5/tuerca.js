@@ -21,15 +21,15 @@ class MyTuerca extends THREE.Object3D {
 
         var csg = new CSG();
         csg.intersect([cilindro_tuerca_M, esfera_bordes_tuerca_M]);
-        //csg.subtract([cilindro_agujero_central_M]);
+        csg.subtract([cilindro_agujero_central_M]);
 
-       // for(var i = 0; i < 10; i++){
-            //var toro = new THREE.TorusGeometry(2, 0.15, 16, 16);
-            //toro.rotateX(Math.PI/2);
-            //toro.translate(0, 1.5-0.15-0.3*i, 0);
-            //var toro_M = new THREE.Mesh(toro, Mat);
-            //csg.subtract([toro_M]);
-        //}
+        for(var i = 0; i < 10; i++){
+            var toro = new THREE.TorusGeometry(2, 0.15, 16, 16);
+            toro.rotateX(Math.PI/2);
+            toro.translate(0, 1.5-0.15-0.3*i, 0);
+            var toro_M = new THREE.Mesh(toro, Mat);
+            csg.subtract([toro_M]);
+        }
 
         this.tuerca = csg.toMesh();
         this.add(this.tuerca);

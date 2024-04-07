@@ -11,6 +11,7 @@ import { Stats } from '../libs/stats.module.js'
 
 import {MyTaza} from './taza.js'
 import {MyTuerca} from './tuerca.js'
+import {MyPieza} from './pieza.js'
 
  
 /// La clase fachada del modelo
@@ -55,6 +56,7 @@ class MyScene extends THREE.Scene {
   
     this.models.push(new MyTaza(this.gui, "Controles de la Taza"));
     this.models.push(new MyTuerca(this.gui, "Controles de la Tuerca"));
+    this.models.push(new MyPieza(this.gui, "Controles de la Pieza"));
     this.models.forEach(model => this.add(model));
   
   }
