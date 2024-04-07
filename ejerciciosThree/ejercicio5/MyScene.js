@@ -9,10 +9,10 @@ import { Stats } from '../libs/stats.module.js'
 // Clases de mi proyecto
 
 
-import {MyTaza} from './taza.js'
-import {MyTuerca} from './tuerca.js'
-import {MyPieza} from './pieza.js'
-import {Myoriginal} from './original.js'
+//import {MyTaza} from './taza.js'
+//import {MyTuerca} from './tuerca.js'
+//import {MyPieza} from './pieza.js'
+import {MyOriginal} from './original.js'
 
  
 /// La clase fachada del modelo
@@ -55,10 +55,10 @@ class MyScene extends THREE.Scene {
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
     this.models = [];
   
-    this.models.push(new MyTaza(this.gui, "Controles de la Taza"));
-    this.models.push(new MyTuerca(this.gui, "Controles de la Tuerca"));
-    this.models.push(new MyPieza(this.gui, "Controles de la Pieza"));
-    this.models.push(new Myoriginal(this.gui, "Controles de la original"));
+    //this.models.push(new MyTaza(this.gui, "Controles de la Taza"));
+    //this.models.push(new MyTuerca(this.gui, "Controles de la Tuerca"));
+    //this.models.push(new MyPieza(this.gui, "Controles de la Pieza"));
+    this.models.push(new MyOriginal(this.gui, "Controles de la original"));
     this.models.forEach(model => this.add(model));
   
   }

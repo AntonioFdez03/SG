@@ -18,16 +18,16 @@ class MyOriginal extends THREE.Object3D {
         // Se crean los nodos Mesh
         var cubito = new THREE.Mesh(cubo_ext, Mat);
         var cilindro_interior_M = new THREE.Mesh(cilindro_interior, Mat);
-        var asa_M = new THREE.Mesh(esfera, Mat);
+        var esferita = new THREE.Mesh(esfera, Mat);
     
         var csg = new CSG();
-        csg.union([cubo,cilindro_interior_M]);
-        csg.subtract([esfera]);
+        csg.union([cubito,cilindro_interior_M]);
+        csg.subtract([esferita]);
 
-        this.taza = csg.toMesh();
+        this.original = csg.toMesh();
 
-        this.taza.position.set(-10,1,0);
-        this.add(this.taza);
+       
+        this.add(this.original);
 
   }
   
@@ -36,8 +36,8 @@ class MyOriginal extends THREE.Object3D {
   }
 
   update () {
-    this.taza.rotation.y += 0.01;
-    this.taza.rotation.x += 0.01;
+    this.original.rotation.y += 0.01;
+    this.original.rotation.x += 0.01;
   }
 }
 
