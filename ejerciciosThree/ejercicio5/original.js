@@ -27,7 +27,7 @@ class MyOriginal extends THREE.Object3D {
     
         var csg = new CSG();
         csg.union([torus_M,cubito]);
-        csg.subtract([cubito,cilindro_interior_M]);
+        csg.subtract([cilindro_interior_M]);
         csg.subtract([esferita]);
         
 
