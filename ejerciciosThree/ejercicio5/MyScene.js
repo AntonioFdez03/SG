@@ -15,7 +15,7 @@ import { Stats } from '../libs/stats.module.js'
 //import {MyOriginal} from './original.js'
 //import { MyExamen } from './examen.js'
 import {MyExamen2} from './examen2.js'
-
+//import { MyPrueba } from './prueba.js'
  
 /// La clase fachada del modelo
 /**
@@ -63,7 +63,7 @@ class MyScene extends THREE.Scene {
     //this.models.push(new MyOriginal(this.gui, "Controles de la original"));
    // this.models.push(new MyExamen(this.gui, "Controles del examen"));
     this.models.push(new MyExamen2(this.gui, "Controles del examen"));
-    
+    //this.models.push(new MyPrueba(this.gui, "Controles de la prueba"));
     this.models.forEach(model => this.add(model));
   
   }
