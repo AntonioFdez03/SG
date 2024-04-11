@@ -16,6 +16,21 @@ class MyExamen extends THREE.Object3D {
     var cilindro_central = new THREE.CylinderGeometry(1,1,10,32);
     var esfera_central = new THREE.SphereGeometry(2,32,32);
 
+
+    
+
+    // Crear un material
+    
+
+    // Crear una malla usando la geometría y el material
+  
+    
+
+ 
+    // Añadir la malla a la escena
+    
+   
+
    
     cilindro_recorte.rotateX(Math.PI/2);
 
@@ -25,7 +40,9 @@ class MyExamen extends THREE.Object3D {
     var cilindro_interior_M = new THREE.Mesh(cilindro_recorte, Mat);
     var cilindro_central_M = new THREE.Mesh(cilindro_central, Mat);
     var esfera_central_M = new THREE.Mesh(esfera_central, Mat);
-   
+    
+
+    
    
     // Crear la forma de la pieza de recorte
     const x = 0, y = 0;
@@ -40,7 +57,7 @@ class MyExamen extends THREE.Object3D {
         steps: 100,
         depth: 4,
         bevelEnabled: true,
-        bevelThickness: 0.7,
+        bevelThickness: 0,
         bevelSize: 0.7,
         bevelOffset: 0.7,
         bevelSegments: 1,
@@ -67,7 +84,7 @@ class MyExamen extends THREE.Object3D {
       steps: 100,
       depth: 8,
       bevelEnabled: true,
-      bevelThickness: 0.7,
+      bevelThickness: 0,
       bevelSize: 0.7,
       bevelOffset: 0.7,
       bevelSegments: 1,
@@ -89,6 +106,7 @@ class MyExamen extends THREE.Object3D {
     cilindro_interior_M.scale.set(scale,scale,scale);
     cilindro_central_M.scale.set(scale,scale,scale);
     esfera_central_M.scale.set(scale,scale,scale);
+    //cylinder.scale.set(scale,scale,scale);
    
 
     //Cortas la pieza
@@ -101,6 +119,8 @@ class MyExamen extends THREE.Object3D {
 
     //Añadir a la escena
     this.add(this.MyExamen);
+  
+
     
 
 
@@ -119,7 +139,7 @@ class MyExamen extends THREE.Object3D {
 
   update () {
     // Aquí puedes actualizar la geometría del corazón
-    this.children[0].rotation.y += 0.05;
+    //this.children[0].rotation.y += 0.05;
     
   }
 
