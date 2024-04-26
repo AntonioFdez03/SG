@@ -1,40 +1,73 @@
 import * as THREE from '../libs/three.module.js'
-//import {CSG} from '../libs/CSG-v2.js'
-
-class CustomCurve extends THREE.Curve {
-    getPoint(t) {
-        const radius = 1;
-        const tubeRadius = 0.02;
-        const radialSegments = 100;
-        const tubularSegments = 20;
-        const p = 2; // Número de espirales
-        const q = 3; // Número de vueltas alrededor del tubo por cada espiral
-
-        const u = p * t;
-        const v = q * t;
-
-        const x = (radius + tubeRadius * Math.cos(v)) * Math.cos(u);
-        const y = (radius + tubeRadius * Math.cos(v)) * Math.sin(u);
-        const z = tubeRadius * Math.sin(v);
-
-        return new THREE.Vector3(x, y, z);
-    }
-}
 
 class MyCircuito extends THREE.Object3D {
     constructor(gui,titleGui) {
         super();
 
         // Crear una geometría de tubo con la curva personalizada
-        const curve = new CustomCurve();
-        const geometry = new THREE.TubeGeometry(curve, 20, 0.1, 8, true);
+        const curve = new THREE.CatmullRomCurve3([
+            //new THREE.Vector3(0, 0, 0),//Inicio recta
+            new THREE.Vector3(5, 0, 0),//Fin curva e inicio curva
+            new THREE.Vector3(7.5, 2, 0),
+            new THREE.Vector3(10, 2.7, 0),//Punto mas alto de la curva
+            new THREE.Vector3(12.5, 2, 0),
+            new THREE.Vector3(15, 0, 0),//Fin curva e inicio del giro
+            new THREE.Vector3(23, 2, 2),
+            new THREE.Vector3(25, 0, 5),//Fin giro e inicio recta
+            new THREE.Vector3(25, 0, 10),
+            new THREE.Vector3(23, -2, 13),//Fin recta e inicio curva
+            new THREE.Vector3(15, 0, 15),
+            new THREE.Vector3(10, 0, 15),//Inicio espiral
+            new THREE.Vector3(7, 0.5, 13),
+            new THREE.Vector3(6, 1, 10),
+            new THREE.Vector3(7, 1.5, 7),
+            new THREE.Vector3(10, 2, 6),
+            new THREE.Vector3(13, 2.5, 7),
+            new THREE.Vector3(14, 3, 10),
+            new THREE.Vector3(13, 3.5, 13),
+            new THREE.Vector3(10, 4, 14),//Segunda vuelta
+            new THREE.Vector3(7, 4.5, 13),
+            new THREE.Vector3(6, 5, 10),
+            new THREE.Vector3(7, 5.5, 7),
+            new THREE.Vector3(10, 6, 6),
+            new THREE.Vector3(13, 6.5, 7),
+            new THREE.Vector3(14, 7, 10),
+            new THREE.Vector3(13, 7.5, 13),
+            new THREE.Vector3(10, 8, 14),//Tercera vuelta
+            new THREE.Vector3(7, 8.5, 13),
+            new THREE.Vector3(6, 9, 10),
+            new THREE.Vector3(7, 9.5, 7),
+            new THREE.Vector3(10, 10, 5),//Fin espiral 
+            new THREE.Vector3(15, 10, 5),//Inicio looping
+            new THREE.Vector3(18, 12, 6),
+            new THREE.Vector3(19, 15, 7),//Punto mas a la derecha del looping
+            new THREE.Vector3(18, 18, 8),
+            new THREE.Vector3(15, 19, 9),//Punto mas alto del looping
+            new THREE.Vector3(12, 18, 10),
+            new THREE.Vector3(10, 15, 10),//Fin looping e inicio recta
+            new THREE.Vector3(10, 0, 10),
+            new THREE.Vector3(8, -3, 10),
+            new THREE.Vector3(5, -4, 10),
+            new THREE.Vector3(2, -3, 8),
+            new THREE.Vector3(1, 0, 5),
+            new THREE.Vector3(2, 0, 2),
+            new THREE.Vector3(5, 0, 0),//Fin circuito
+
+            
+            
+        ]);
+        
+        
+         // El segundo parámetro en false hace que la curva sea abierta
+        const geometry = new THREE.TubeGeometry(curve, 150, 0.5, 8, true);
 
         // Crear un material
-        const material = new THREE.MeshBasicMaterial({color: 0xff0000, flatShading: false });
+        const material = new THREE.MeshNormalMaterial();
 
         // Crear una malla y añadirla al objeto 3D
-        const mesh = new THREE.Mesh(geometry, material);
-        this.add(mesh);
+        const circuito = new THREE.Mesh(geometry, material);
+        
+        this.add(circuito);
 
         this.createGUI(gui,titleGui);
     }
