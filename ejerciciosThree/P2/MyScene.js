@@ -18,7 +18,9 @@ import { Stats } from '../libs/stats.module.js'
 //import { MyPrueba } from './prueba.js'
 //import {MyVictor} from '../ejercicio6/victor.js'
 //import { MyExamen } from './examen.js'
-import { MyCircuito } from './circuito.js'
+//import { MyBomba } from './bomba.js'
+import { MyMoneda } from './moneda.js'
+//import { MyCircuito } from './circuito.js'
 /// La clase fachada del modelo
 /**
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
@@ -68,7 +70,9 @@ class MyScene extends THREE.Scene {
     //this.models.push(new MyVictor(this.gui, "Controles de victor"));
     //this.models.push(new MyPrueba(this.gui, "Controles de la prueba"));
     //this.models.push(new MyExamen(this.gui, "Controles del examen"));
-    this.models.push(new MyCircuito(this.gui, "Controles del circuito"));
+    //this.models.push(new MyCircuito(this.gui, "Controles del circuito"));
+    //this.models.push(new MyBomba(this.gui, "Controles de la bomba"));
+    this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
     this.models.forEach(model => this.add(model));
   
   }
