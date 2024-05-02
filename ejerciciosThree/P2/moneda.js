@@ -8,7 +8,7 @@ class MyMoneda extends THREE.Object3D {
     this.createGUI(gui,titleGui);
 
     // Material para el cilindro (color gris)
-    var cilindroMaterial = new THREE.MeshBasicMaterial({color: 0x808080});
+    var cilindroMaterial = new THREE.MeshBasicMaterial({color: 0xE9AD43});
     var cilindroMaterial2 = new THREE.MeshBasicMaterial({color: 0x000000});
     
 
@@ -29,7 +29,7 @@ class MyMoneda extends THREE.Object3D {
     
 
 
-    var material = new THREE.MeshBasicMaterial({color:0xe3a278});
+    var material = new THREE.MeshBasicMaterial({color:0xE9AD43});
     var mesh = new THREE.Mesh(geometry, material);
     var mesh2 = new THREE.Mesh(geometry, material);
 
@@ -130,16 +130,23 @@ class MyMoneda extends THREE.Object3D {
 
     // Añadir el grupo al objeto 3D
    // this.add(group);
-   this.add(cilindro_interior_M);
-    this.add(mesh);
-    this.add(mesh2);
-    this.add(bigotes_1);
-    this.add(bigotes_2);
-    this.add(bigotes_3);
-    this.add(bigotes_4);
-    this.add(bigotes_5);
-    this.add(bigotes_6);
-    this.add(nariz_M);
+   // Crear un grupo
+  var group = new THREE.Group();
+
+  // Añadir todos los objetos al grupo
+  group.add(cilindro_interior_M);
+  group.add(mesh);
+  group.add(mesh2);
+  group.add(bigotes_1);
+  group.add(bigotes_2);
+  group.add(bigotes_3);
+  group.add(bigotes_4);
+  group.add(bigotes_5);
+  group.add(bigotes_6);
+  group.add(nariz_M);
+
+  // Añadir el grupo al objeto 3D
+  this.add(group);
       
   }
 
