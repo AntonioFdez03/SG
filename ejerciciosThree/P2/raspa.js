@@ -133,14 +133,17 @@ class MyRaspa extends THREE.Object3D {
 
     
 
-    //this.add(this.Myraspa2);
+        //this.add(this.Myraspa2);
+    // Crear un grupo
+    var group = new THREE.Group();
 
-    this.add(this.Myraspa);
-    this.add(this.Myraspa2);
-    this.add(this.Myraspa2_2);
-  
+    // Añadir todos los objetos al grupo
+    group.add(this.Myraspa);
+    group.add(this.Myraspa2);
+    group.add(this.Myraspa2_2);
 
-  
+    // Añadir el grupo al objeto 3D
+    this.add(group);
     //this.add(cilindro2);
 
 
