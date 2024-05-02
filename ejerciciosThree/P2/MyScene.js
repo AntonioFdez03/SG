@@ -20,7 +20,8 @@ import { Stats } from '../libs/stats.module.js'
 //import { MyExamen } from './examen.js'
 //import { MyBomba } from './bomba.js'
 //import { MyMoneda } from './moneda.js'
-import { MyRaspa } from './raspa.js'
+//import { MyRaspa } from './raspa.js'
+import { MyRayo } from './rayo.js'
 //import { MyCircuito } from './circuito.js'
 /// La clase fachada del modelo
 /**
@@ -74,7 +75,9 @@ class MyScene extends THREE.Scene {
     //this.models.push(new MyCircuito(this.gui, "Controles del circuito"));
     //this.models.push(new MyBomba(this.gui, "Controles de la bomba"));
     //this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
-    this.models.push(new MyRaspa(this.gui, "Controles de la raspa"));
+    //this.models.push(new MyRaspa(this.gui, "Controles de la raspa"));
+    this.models.push(new MyRayo(this.gui, "Controles del rayo"));
+
     this.models.forEach(model => this.add(model));
   
   }
