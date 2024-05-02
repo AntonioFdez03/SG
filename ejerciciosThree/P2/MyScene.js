@@ -22,8 +22,9 @@ import { Stats } from '../libs/stats.module.js'
 //import { MyMoneda } from './moneda.js'
 //import { MyRaspa } from './raspa.js'
 //import { MyRayo } from './rayo.js'
-import { MyRaton } from './raton.js'
+//import { MyRaton } from './raton.js'
 //import { MyCircuito } from './circuito.js'
+import {MyGato} from './gato.js'
 /// La clase fachada del modelo
 /**
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
@@ -78,7 +79,8 @@ class MyScene extends THREE.Scene {
     //this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
     //this.models.push(new MyRaspa(this.gui, "Controles de la raspa"));
     //this.models.push(new MyRayo(this.gui, "Controles del rayo"));
-    this.models.push(new MyRaton(this.gui, "Controles del ratón"));
+    //this.models.push(new MyRaton(this.gui, "Controles del ratón"));
+    this.models.push(new MyGato(this.gui, "Controles del gato"));
 
     this.models.forEach(model => this.add(model));
   
