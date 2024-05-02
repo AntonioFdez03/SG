@@ -17,7 +17,7 @@ class MyGato extends THREE.Object3D {
         var ojo = new THREE.SphereGeometry(0.05, 32, 32);
         var ojo2 = ojo.clone();
         var nariz = new THREE.SphereGeometry(0.05, 32, 32);
-        var bigote1i = new THREE.CylinderGeometry(0.01, 0.01, 0.3, 32);
+        var bigote1i = new THREE.CylinderGeometry(0.005, 0.005, 0.3, 32);
         var bigote2i = bigote1i.clone();
         var bigote3i = bigote1i.clone();
         var bigote1d = bigote1i.clone();
@@ -30,6 +30,13 @@ class MyGato extends THREE.Object3D {
         var pataExtremo1 = new THREE.SphereGeometry(0.1, 32, 32);
         var pataExtremo2 = pataExtremo1.clone();
         var pata_superior = new THREE.SphereGeometry(0.2, 32, 32);
+
+        var boca_path = new THREE.Path();
+        boca_path.moveTo(-0.1, 0);
+        boca_path.absarc(-0.05, 0, 0.05, Math.PI, 0, true);
+        boca_path.absarc(0.05, 0, 0.05, Math.PI, 0, true);
+
+        var geometry = new THREE.BufferGeometry().setFromPoints(boca_path.getPoints(50));
 
         //Skate
         var tabla = new THREE.BoxGeometry(1,0.1,1,32);
@@ -59,25 +66,25 @@ class MyGato extends THREE.Object3D {
         interior_oreja2.rotateX(-0.03);
         
         // Posicionar los ojos
-        ojo.translate(-0.2, 0.2, 0.4);
-        ojo2.translate(0.2, 0.2, 0.4);
+        ojo.translate(-0.2, 0.1, 0.45);
+        ojo2.translate(0.2, 0.1, 0.45);
 
         //Posicionar la nariz
-        nariz.translate(0, 0.1, 0.5);
+        nariz.translate(0, -0.05, 0.5);
 
         // Posicionar los bigotes
         bigote1i.rotateZ(Math.PI/2.5);
-        bigote1i.translate(-0.2, 0.1, 0.5);
+        bigote1i.translate(-0.2, -0.05, 0.5);
         bigote2i.rotateZ(Math.PI/2);
-        bigote2i.translate(-0.2, 0.05, 0.5);
+        bigote2i.translate(-0.2, -0.1, 0.5);
         bigote3i.rotateZ(-Math.PI/2.5);
-        bigote3i.translate(-0.2, 0, 0.5);
+        bigote3i.translate(-0.2, -0.15, 0.5);
         bigote1d.rotateZ(-Math.PI/2.5);
-        bigote1d.translate(0.2, 0.1, 0.5);
+        bigote1d.translate(0.2, -0.05, 0.5);
         bigote2d.rotateZ(-Math.PI/2);
-        bigote2d.translate(0.2, 0.05, 0.5);
+        bigote2d.translate(0.2, -0.1, 0.5);
         bigote3d.rotateZ(Math.PI/2.5);
-        bigote3d.translate(0.2, 0, 0.5);
+        bigote3d.translate(0.2, -0.15, 0.5);
       
         // Posicionar el cuerpo
         cuerpo.rotateX(Math.PI/2);
@@ -111,10 +118,11 @@ class MyGato extends THREE.Object3D {
         // Crear material
         var material = new THREE.MeshBasicMaterial({color:0xFFC085});
         var materialOjos = new THREE.MeshBasicMaterial({color:0x000000});
-        var materialNariz = new THREE.MeshBasicMaterial({color:0xFF6A8E});
+        var materialOrejas = new THREE.MeshBasicMaterial({color:0xFF6A8E});
+        var materialNariz = new THREE.MeshBasicMaterial({color:0xF1846C});
         var materialCuerpo = new THREE.MeshBasicMaterial({color:0xFFB074});
-        var materialPatas = new THREE.MeshBasicMaterial({color:0xFFC060});
-        var materialBigotes = new THREE.MeshBasicMaterial({color:0xBEBEBE});
+        var materialPatas = new THREE.MeshBasicMaterial({color:0xF7C99B});
+        var materialBigotes = new THREE.MeshBasicMaterial({color:0xDFDCDE});
         var materialTabla = new THREE.MeshBasicMaterial({color:0xB22222});
         var materialEjeRuedas = new THREE.MeshBasicMaterial({color:0x606060});
 
@@ -133,6 +141,7 @@ class MyGato extends THREE.Object3D {
         var bigote1d_M = new THREE.Mesh(bigote1d, materialBigotes);
         var bigote2d_M = new THREE.Mesh(bigote2d, materialBigotes);
         var bigote3d_M = new THREE.Mesh(bigote3d, materialBigotes);
+        var boca = new THREE.Line(geometry, materialOjos);
         var cuerpo_M = new THREE.Mesh(cuerpo, materialCuerpo);
         var cuerpo2_M = new THREE.Mesh(cuerpo_2, materialCuerpo);
         var cuerpo3_M = new THREE.Mesh(cuerpo_3, materialCuerpo);
@@ -153,6 +162,9 @@ class MyGato extends THREE.Object3D {
         var rueda3_M = new THREE.Mesh(rueda3, materialOjos);
         var rueda4_M = new THREE.Mesh(rueda4, materialOjos);
 
+        boca.rotateX(Math.PI);
+        boca.position.set(0, -0.15, 0.47);
+
         //GRUPOS - CABEZA
         this.cabeza_entera = new THREE.Group();
         this.cabeza_entera.add(cabeza_M);
@@ -169,6 +181,7 @@ class MyGato extends THREE.Object3D {
         this.cabeza_entera.add(bigote1d_M);
         this.cabeza_entera.add(bigote2d_M);
         this.cabeza_entera.add(bigote3d_M);
+        this.cabeza_entera.add(boca);
 
         this.cabeza_entera.scale.set(0.65,0.65,0.65);
         this.cabeza_entera.position.set(0,0,0.1);
@@ -207,6 +220,15 @@ class MyGato extends THREE.Object3D {
         this.cola2.position.set(0, 0, -1.25);
         this.cola1.add(this.cola2);
         this.cola2.scale.set(1, 1, 1.1);
+        
+        //Materiales de la cola
+        this.cola1.children.forEach((child) => {
+          child.material = materialPatas;
+         });
+
+         this.cola2.children.forEach((child) => {
+          child.material = materialPatas;
+         });
 
         //GATO
         var gato = new THREE.Group();
@@ -245,12 +267,13 @@ class MyGato extends THREE.Object3D {
 
     update () {
         // Aquí puedes actualizar la geometría del gato
-        var time = Date.now() * 0.001;
+        var time = Date.now() * 0.003;
+        var time1 = Date.now() * 0.001;
 
         // Mover cola1 y cola2 suavemente
         this.cola1.rotation.y = Math.sin(time) * 0.5;
         this.cola2.rotation.y = Math.sin(time) * 0.5;
-        this.cabeza_entera.rotation.y = Math.sin(time) * 0.5;
+        this.cabeza_entera.rotation.y = Math.sin(time1) * 0.5;
     }
 }
 
