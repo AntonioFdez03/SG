@@ -317,7 +317,7 @@ class MyScene extends THREE.Scene {
   this.models[0].lookAt(position.clone().add(tangent));
 
   // Mover el gato 0.5 unidades en su eje Y local
-  this.models[0].translateY(0.55);
+  this.models[0].translateY(0.515);
   // Se actualiza el resto del modelo
   this.models[0].update();
   
