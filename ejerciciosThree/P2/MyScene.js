@@ -23,7 +23,7 @@ import { Stats } from '../libs/stats.module.js'
 //import { MyRaspa } from './raspa.js'
 //import { MyRayo } from './rayo.js'
 //import { MyRaton } from './raton.js'
-//import { MyCircuito } from './circuito.js'
+import { MyCircuito } from './circuito.js'
 import {MyGato} from './gato.js'
 /// La clase fachada del modelo
 /**
@@ -43,9 +43,6 @@ class MyScene extends THREE.Scene {
     this.initStats();
     
     // Construimos los distinos elementos que tendremos en la escena
-    
-    // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
-    // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
     this.createLights ();
     
     // Tendremos una cámara con un control de movimiento con el ratón
@@ -59,31 +56,77 @@ class MyScene extends THREE.Scene {
     this.axis = new THREE.AxesHelper (2);
     this.add (this.axis);
     
+    // Crear la curva
+    this.curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(5, 0, 0),//Fin curva e inicio curva
+            new THREE.Vector3(7.5, 2, 0),
+            new THREE.Vector3(10, 2.7, 0),//Punto mas alto de la curva
+            new THREE.Vector3(12.5, 2, 0),
+            new THREE.Vector3(15, 0, 0),//Fin curva e inicio del giro
+            new THREE.Vector3(23, 2, 2),
+            new THREE.Vector3(25, 0, 5),//Fin giro e inicio recta
+            new THREE.Vector3(25, 0, 10),
+            new THREE.Vector3(23, -2, 13),//Fin recta e inicio curva
+            new THREE.Vector3(15, 0, 15),
+            new THREE.Vector3(10, 0, 15),//Inicio espiral
+            new THREE.Vector3(7, 0.5, 13),
+            new THREE.Vector3(6, 1, 10),
+            new THREE.Vector3(7, 1.5, 7),
+            new THREE.Vector3(10, 2, 6),
+            new THREE.Vector3(13, 2.5, 7),
+            new THREE.Vector3(14, 3, 10),
+            new THREE.Vector3(13, 3.5, 13),
+            new THREE.Vector3(10, 4, 14),//Segunda vuelta
+            new THREE.Vector3(7, 4.5, 13),
+            new THREE.Vector3(6, 5, 10),
+            new THREE.Vector3(7, 5.5, 7),
+            new THREE.Vector3(10, 6, 6),
+            new THREE.Vector3(13, 6.5, 7),
+            new THREE.Vector3(14, 7, 10),
+            new THREE.Vector3(13, 7.5, 13),
+            new THREE.Vector3(10, 8, 14),//Tercera vuelta
+            new THREE.Vector3(7, 8.5, 13),
+            new THREE.Vector3(6, 9, 10),
+            new THREE.Vector3(7, 9.5, 7),
+            new THREE.Vector3(10, 10, 5),//Fin espiral 
+            new THREE.Vector3(15, 10, 5),//Inicio looping
+            new THREE.Vector3(18, 12, 4),
+            new THREE.Vector3(19, 15, 3),//Punto mas a la derecha del looping
+            new THREE.Vector3(18, 18, 2),
+            new THREE.Vector3(15, 19, 1),//Punto mas alto del looping
+            new THREE.Vector3(12, 18, 0),
+            new THREE.Vector3(11, 15, 0),//Punto mas a la izquierda del looping
+            new THREE.Vector3(12, 12, 0),
+            new THREE.Vector3(15, 10, 0),//Fin looping e inicio recta
+            new THREE.Vector3(20, 10, 0),//Fin recta e inicio curva
+            new THREE.Vector3(23, 10, 2),
+            new THREE.Vector3(24, 10, 5),//Mitad de la curva   
+            new THREE.Vector3(23, 10, 8),
+            new THREE.Vector3(20, 10, 10),//Fin curva e inicio recta
+            new THREE.Vector3(10, 10, 10),
+            new THREE.Vector3(10, 0, 10),
+            new THREE.Vector3(8, -3, 10),
+            new THREE.Vector3(5, -4, 10),
+            new THREE.Vector3(2, -3, 8),
+            new THREE.Vector3(1, 0, 5),
+            new THREE.Vector3(2, 0, 2),
+            new THREE.Vector3(5, 0, 0),//Fin circuito
+    ]);
     
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.models = [];
-  
-    //this.models.push(new MyTaza(this.gui, "Controles de la Taza"));
-    //this.models.push(new MyTuerca(this.gui, "Controles de la Tuerca"));
-    //this.models.push(new MyPieza(this.gui, "Controles de la Pieza"));
-    //this.models.push(new MyOriginal(this.gui, "Controles de la original"));
-    //this.models.push(new MyExamen(this.gui, "Controles del examen"));
-    //this.models.push(new MyExamen2(this.gui, "Controles del examen"));
-    //this.models.push(new MyVictor(this.gui, "Controles de victor"));
-    //this.models.push(new MyPrueba(this.gui, "Controles de la prueba"));
-    //this.models.push(new MyExamen(this.gui, "Controles del examen"));
-    //this.models.push(new MyCircuito(this.gui, "Controles del circuito"));
-    //this.models.push(new MyBomba(this.gui, "Controles de la bomba"));
-    //this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
-    //this.models.push(new MyRaspa(this.gui, "Controles de la raspa"));
-    //this.models.push(new MyRayo(this.gui, "Controles del rayo"));
-    //this.models.push(new MyRaton(this.gui, "Controles del ratón"));
-    this.models.push(new MyGato(this.gui, "Controles del gato"));
 
+    // Crear un objeto para seguir la posición del gato a lo largo de la curva
+    
+
+    // Por último creamos el modelo.
+    this.models = [];
+    this.models.push(new MyGato(this.gui, "Controles del gato"));
+    this.models[0].scale.set(0.1, 0.1, 0.1);
+    this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
     this.models.forEach(model => this.add(model));
-  
+    
+    this.models[0].rotation.y = Math.PI;
+    
+    this.t = 0;
   }
   
   initStats() {
@@ -253,27 +296,53 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
-
   update () {
-    
-    if (this.stats) this.stats.update();
-    
-    // Se actualizan los elementos de la escena para cada frame
-    
-    // Se actualiza la posición de la cámara según su controlador
-    this.cameraControl.update();
-    
-    // Se actualiza el resto del modelo
-    this.models.forEach(model => model.update());
-    
-    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    this.renderer.render (this, this.getCamera());
+  if (this.stats) this.stats.update();
+  
+  // Se actualizan los elementos de la escena para cada frame
+  this.cameraControl.update();
 
-    // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
-    // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
-    // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
-    requestAnimationFrame(() => this.update())
+  // Mover el gato a lo largo de la curva
+  this.t -= 0.0005;
+  if (this.t < 0) this.t = 1;
+  let position = this.curve.getPointAt(this.t);
+
+  // Calcular un vector perpendicular a la tangente de la curva
+  let tangent = this.curve.getTangentAt(this.t);
+
+  // Ajustar la posición en el eje Y del gato para que esté más cerca del suelo
+  this.models[0].position.set(position.x, position.y + 0.7, position.z); // Ajustado a 0.1 debido al cambio de escala
+
+  // Hacer que el gato mire en la dirección en la que se está moviendo
+  this.models[0].lookAt(new THREE.Vector3().addVectors(position, tangent));
+
+  // Se actualiza el resto del modelo
+  this.models[0].rotateY(Math.PI);  
+
+  // Calcular el ángulo de inclinación basado en la tangente de la curva y ajustar la rotación en el eje X del gato
+  let inclineAngle = Math.atan(tangent.y / Math.sqrt(tangent.x * tangent.x + tangent.z * tangent.z));
+
+  // Si estamos en el looping, usamos la normal de la curva para calcular la rotación
+  if (this.t > 0.6 && this.t < 0.8) {
+    let binormal = new THREE.Vector3();
+    let normal = new THREE.Vector3();
+    // Calcular el binormal
+    binormal.crossVectors(tangent, new THREE.Vector3(0, 1, 0)).normalize();
+    // Calcular la normal
+    normal.crossVectors(binormal, tangent).normalize();
+    inclineAngle = Math.atan(normal.y / Math.sqrt(normal.x * normal.x + normal.z * normal.z));
   }
+
+  this.models[0].rotateX(inclineAngle - this.models[0].rotation.x); // Invertimos el signo del ángulo
+
+  this.models.forEach(model => model.update());
+
+  // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
+  this.renderer.render (this, this.getCamera());
+
+  // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
+  requestAnimationFrame(() => this.update());
+}
 }
 
 /// La función   main
