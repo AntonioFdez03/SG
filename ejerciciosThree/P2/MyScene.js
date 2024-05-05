@@ -1,4 +1,3 @@
-
 // Clases de la biblioteca
 
 import * as THREE from '../libs/three.module.js'
@@ -103,7 +102,7 @@ class MyScene extends THREE.Scene {
             new THREE.Vector3(24, 10, 5),//Mitad de la curva   
             new THREE.Vector3(23, 10, 8),
             new THREE.Vector3(20, 10, 10),//Fin curva e inicio recta
-            new THREE.Vector3(10, 10, 10),
+            new THREE.Vector3(12, 10, 10),
             new THREE.Vector3(10, 0, 10),
             new THREE.Vector3(8, -3, 10),
             new THREE.Vector3(5, -4, 10),
@@ -120,7 +119,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     this.models = [];
     this.models.push(new MyGato(this.gui, "Controles del gato"));
-    this.models[0].scale.set(0.1, 0.1, 0.1);
+    this.models[0].scale.set(0.05, 0.05, 0.05);
     this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
     this.models.forEach(model => this.add(model));
     
@@ -296,6 +295,7 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
+  
   update () {
   if (this.stats) this.stats.update();
   
@@ -307,42 +307,38 @@ class MyScene extends THREE.Scene {
   if (this.t < 0) this.t = 1;
   let position = this.curve.getPointAt(this.t);
 
-  // Calcular un vector perpendicular a la tangente de la curva
-  let tangent = this.curve.getTangentAt(this.t);
+  // Calcular la tangente de la curva en este punto
+  let tangent = this.curve.getTangentAt(this.t).normalize();
 
-  // Ajustar la posición en el eje Y del gato para que esté más cerca del suelo
-  this.models[0].position.set(position.x, position.y + 0.7, position.z); // Ajustado a 0.1 debido al cambio de escala
+  // Ajustar la posición del gato
+  this.models[0].position.copy(position);
 
   // Hacer que el gato mire en la dirección en la que se está moviendo
-  this.models[0].lookAt(new THREE.Vector3().addVectors(position, tangent));
+  this.models[0].lookAt(position.clone().add(tangent));
 
+  // Mover el gato 0.5 unidades en su eje Y local
+  this.models[0].translateY(0.55);
   // Se actualiza el resto del modelo
-  this.models[0].rotateY(Math.PI);  
-
-  // Calcular el ángulo de inclinación basado en la tangente de la curva y ajustar la rotación en el eje X del gato
-  let inclineAngle = Math.atan(tangent.y / Math.sqrt(tangent.x * tangent.x + tangent.z * tangent.z));
-
-  // Si estamos en el looping, usamos la normal de la curva para calcular la rotación
-  if (this.t > 0.6 && this.t < 0.8) {
-    let binormal = new THREE.Vector3();
-    let normal = new THREE.Vector3();
-    // Calcular el binormal
-    binormal.crossVectors(tangent, new THREE.Vector3(0, 1, 0)).normalize();
-    // Calcular la normal
-    normal.crossVectors(binormal, tangent).normalize();
-    inclineAngle = Math.atan(normal.y / Math.sqrt(normal.x * normal.x + normal.z * normal.z));
-  }
-
-  this.models[0].rotateX(inclineAngle - this.models[0].rotation.x); // Invertimos el signo del ángulo
-
+  this.models[0].update();
+  
+  this.models[0].rotateY(Math.PI);
   this.models.forEach(model => model.update());
 
+  // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
+  let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
+  cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
+  let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
+  this.camera.position.copy(cameraPosition);
+
+  // Hacer que la cámara mire al gato
+  this.camera.lookAt(this.models[0].position);
+  
   // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
   this.renderer.render (this, this.getCamera());
-
   // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
   requestAnimationFrame(() => this.update());
 }
+  
 }
 
 /// La función   main

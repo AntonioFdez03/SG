@@ -52,7 +52,7 @@ class MyCircuito extends THREE.Object3D {
             new THREE.Vector3(24, 10, 5),//Mitad de la curva   
             new THREE.Vector3(23, 10, 8),
             new THREE.Vector3(20, 10, 10),//Fin curva e inicio recta
-            new THREE.Vector3(10, 10, 10),
+            new THREE.Vector3(12, 10, 10),
             new THREE.Vector3(10, 0, 10),
             new THREE.Vector3(8, -3, 10),
             new THREE.Vector3(5, -4, 10),
@@ -67,7 +67,7 @@ class MyCircuito extends THREE.Object3D {
         
         
          // El segundo parámetro en false hace que la curva sea abierta
-        const geometry = new THREE.TubeGeometry(curve, 150, 0.5, 8, true);
+        const geometry = new THREE.TubeGeometry(curve, 1000, 0.5, 64, true);
 
         // Crear un material
         const material = new THREE.MeshNormalMaterial();
