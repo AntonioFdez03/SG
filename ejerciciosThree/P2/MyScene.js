@@ -137,7 +137,56 @@ class MyScene extends THREE.Scene {
     this.models[0].rotation.y = Math.PI;
     
     this.t = 0;
+
+    this.leftArrowDown = false;
+    this.rightArrowDown = false;
+    this.rotationZ=0;
+    this.angle = 0;
+
+    // Definimos un vector de desplazamiento
+    this.displacement = new THREE.Vector3();
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+          // Marcar la tecla izquierda como presionada
+          this.leftArrowDown = true;
+          // Calcular el vector de desplazamiento en el sistema de coordenadas locales del gato
+          let localDisplacement = new THREE.Vector3(0.1, 0, 0); // Por ejemplo, mover a la izquierda
+          localDisplacement.applyQuaternion(this.models[0].quaternion);
+
+          this.rotationZ -= 0.2;
+          // Actualizar el desplazamiento global
+          this.displacement.add(localDisplacement);
+      } else if (event.key === 'ArrowRight') {
+          // Marcar la tecla derecha como presionada
+          this.rightArrowDown = true;
+
+          // Calcular el vector de desplazamiento en el sistema de coordenadas locales del gato
+          let localDisplacement = new THREE.Vector3(-0.1, 0, 0); // Por ejemplo, mover a la derecha
+          localDisplacement.applyQuaternion(this.models[0].quaternion);
+          
+          // Actualizar el desplazamiento global
+          this.displacement.add(localDisplacement);
+          this.rotationZ += 0.2;
+      }
+  });
+  
+  document.addEventListener('keyup', (event) => {
+      if (event.key === 'ArrowLeft') {
+          // Marcar la tecla izquierda como no presionada
+          this.leftArrowDown = false;
+          // Restaurar el desplazamiento cuando se suelta la tecla
+          
+      } else if (event.key === 'ArrowRight') {
+          // Marcar la tecla derecha como no presionada
+          this.rightArrowDown = false;
+          // Restaurar el desplazamiento cuando se suelta la tecla
+        
+      }
+  });
   }
+
+  
   
   initStats() {
   
@@ -306,17 +355,15 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
-  // Añade la variable de velocidad al inicio de tu clase
- 
-
-update () {
+  
+  update () {
   if (this.stats) this.stats.update();
   
   // Se actualizan los elementos de la escena para cada frame
   this.cameraControl.update();
 
   // Mover el gato a lo largo de la curva
-  this.t -= this.velocidadGato;
+  this.t -= 0.0005;
   if (this.t < 0) this.t = 1;
   let position = this.curve.getPointAt(this.t);
 
@@ -335,36 +382,6 @@ update () {
   this.models[0].update();
   
   this.models[0].rotateY(Math.PI);
-
-  // Verifica las colisiones entre el gato y las monedas
-  for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
-    // Si el modelo es una moneda
-    if (this.models[i] instanceof MyMoneda) {
-      // Calcula la distancia entre el gato y la moneda
-      let distancia = this.models[0].position.distanceTo(this.models[i].position);
-      
-      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
-      if (distancia < 0.5) {
-        // Aumenta la "velocidad" del gato
-        this.velocidadGato *= 1.1;
-        
-        // Limita el valor máximo de `this.velocidadGato` a un valor máximo
-        if (this.velocidadGato > 0.01) {
-          this.velocidadGato = 0.01;
-        }
-        
-        // Elimina la moneda de la escena
-        this.remove(this.models[i]);
-        this.models.splice(i, 1);
-        
-        // Sal de la iteración para evitar modificar la lista mientras la recorres
-        break;
-      }
-    }
-  }
-  
-  // Resto del código...
-  
   this.models.forEach(model => model.update());
 
   // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
@@ -381,6 +398,7 @@ update () {
   // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
   requestAnimationFrame(() => this.update());
 }
+  
 }
 
 /// La función   main
