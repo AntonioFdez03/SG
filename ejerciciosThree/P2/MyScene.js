@@ -18,7 +18,7 @@ import { Stats } from '../libs/stats.module.js'
 //import {MyVictor} from '../ejercicio6/victor.js'
 //import { MyExamen } from './examen.js'
 //import { MyBomba } from './bomba.js'
-//import { MyMoneda } from './moneda.js'
+import { MyMoneda } from './moneda.js'
 //import { MyRaspa } from './raspa.js'
 //import { MyRayo } from './rayo.js'
 //import { MyRaton } from './raton.js'
@@ -121,6 +121,16 @@ class MyScene extends THREE.Scene {
     this.models.push(new MyGato(this.gui, "Controles del gato"));
     this.models[0].scale.set(0.05, 0.05, 0.05);
     this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
+    for (let i = 0; i < this.curve.points.length; i++) {
+      this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
+      let lastIndex = this.models.length - 1; // Índice del último elemento añadido
+      this.models[lastIndex].scale.set(0.2, 0.2, 0.2);
+      
+      // Añade un valor a la coordenada y para que la moneda esté por encima del tubo
+      this.models[lastIndex].position.set(this.curve.points[i].x, this.curve.points[i].y + 0.55, this.curve.points[i].z);
+      
+      this.models[lastIndex].rotateY(Math.PI/2);
+    }
     this.models.forEach(model => this.add(model));
     
     this.models[0].rotation.y = Math.PI;
