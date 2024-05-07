@@ -35,6 +35,7 @@ class MyScene extends THREE.Scene {
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
+    this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
@@ -305,15 +306,17 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
-  
-  update () {
+  // Añade la variable de velocidad al inicio de tu clase
+ 
+
+update () {
   if (this.stats) this.stats.update();
   
   // Se actualizan los elementos de la escena para cada frame
   this.cameraControl.update();
 
   // Mover el gato a lo largo de la curva
-  this.t -= 0.0005;
+  this.t -= this.velocidadGato;
   if (this.t < 0) this.t = 1;
   let position = this.curve.getPointAt(this.t);
 
@@ -332,6 +335,36 @@ class MyScene extends THREE.Scene {
   this.models[0].update();
   
   this.models[0].rotateY(Math.PI);
+
+  // Verifica las colisiones entre el gato y las monedas
+  for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
+    // Si el modelo es una moneda
+    if (this.models[i] instanceof MyMoneda) {
+      // Calcula la distancia entre el gato y la moneda
+      let distancia = this.models[0].position.distanceTo(this.models[i].position);
+      
+      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
+      if (distancia < 0.5) {
+        // Aumenta la "velocidad" del gato
+        this.velocidadGato *= 1.1;
+        
+        // Limita el valor máximo de `this.velocidadGato` a un valor máximo
+        if (this.velocidadGato > 0.01) {
+          this.velocidadGato = 0.01;
+        }
+        
+        // Elimina la moneda de la escena
+        this.remove(this.models[i]);
+        this.models.splice(i, 1);
+        
+        // Sal de la iteración para evitar modificar la lista mientras la recorres
+        break;
+      }
+    }
+  }
+  
+  // Resto del código...
+  
   this.models.forEach(model => model.update());
 
   // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
@@ -348,7 +381,6 @@ class MyScene extends THREE.Scene {
   // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
   requestAnimationFrame(() => this.update());
 }
-  
 }
 
 /// La función   main
