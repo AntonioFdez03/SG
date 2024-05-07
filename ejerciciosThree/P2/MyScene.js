@@ -389,9 +389,12 @@ class MyScene extends THREE.Scene {
     this.models[0].rotateZ(this.rotationZ);
   
     // Verifica las colisiones entre el gato y las monedas
-    for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
+    for (let i = 2; i < this.models.length; i++) { // Comienza en 1 para saltar al gato y al circuito
       // Si el modelo es una moneda
       if (this.models[i] instanceof MyMoneda) {
+        //Giro de las monedas
+        this.models[i].rotateY(0.1);
+
         // Calcula la distancia entre el gato y la moneda
         let distancia = this.models[0].position.distanceTo(this.models[i].position);
         
