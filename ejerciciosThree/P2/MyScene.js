@@ -41,6 +41,7 @@ class MyScene extends THREE.Scene {
     this.gui = this.createGUI ();
     
     this.initStats();
+    this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
     // Construimos los distinos elementos que tendremos en la escena
     this.createLights ();
@@ -355,49 +356,76 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
-  
   update () {
-  if (this.stats) this.stats.update();
+    if (this.stats) this.stats.update();
+    
+    // Se actualizan los elementos de la escena para cada frame
+    this.cameraControl.update();
   
-  // Se actualizan los elementos de la escena para cada frame
-  this.cameraControl.update();
-
-  // Mover el gato a lo largo de la curva
-  this.t -= 0.0005;
-  if (this.t < 0) this.t = 1;
-  let position = this.curve.getPointAt(this.t);
-
-  // Calcular la tangente de la curva en este punto
-  let tangent = this.curve.getTangentAt(this.t).normalize();
-
-  // Ajustar la posición del gato
-  this.models[0].position.copy(position);
-
-  // Hacer que el gato mire en la dirección en la que se está moviendo
-  this.models[0].lookAt(position.clone().add(tangent));
-
-  // Mover el gato 0.5 unidades en su eje Y local
-  this.models[0].translateY(0.515);
-  // Se actualiza el resto del modelo
-  this.models[0].update();
+    // Mover el gato a lo largo de la curva
+    this.t -= this.velocidadGato;
+    if (this.t < 0) this.t = 1;
+    let position = this.curve.getPointAt(this.t);
   
-  this.models[0].rotateY(Math.PI);
-  this.models.forEach(model => model.update());
-
-  // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-  let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
-  cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
-  let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
-  this.camera.position.copy(cameraPosition);
-
-  // Hacer que la cámara mire al gato
-  this.camera.lookAt(this.models[0].position);
+    // Calcular la tangente de la curva en este punto
+    let tangent = this.curve.getTangentAt(this.t).normalize();
   
-  // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-  this.renderer.render (this, this.getCamera());
-  // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
-  requestAnimationFrame(() => this.update());
-}
+    // Ajustar la posición del gato
+    this.models[0].position.copy(position);
+  
+    // Hacer que el gato mire en la dirección en la que se está moviendo
+    this.models[0].lookAt(position.clone().add(tangent));
+  
+    // Mover el gato 0.5 unidades en su eje Y local
+    this.models[0].translateY(0.515);
+    // Se actualiza el resto del modelo
+    this.models[0].update();
+    
+    this.models[0].rotateY(Math.PI);
+  
+    // Verifica las colisiones entre el gato y las monedas
+    for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
+      // Si el modelo es una moneda
+      if (this.models[i] instanceof MyMoneda) {
+        // Calcula la distancia entre el gato y la moneda
+        let distancia = this.models[0].position.distanceTo(this.models[i].position);
+        
+        // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
+        if (distancia < 0.5) {
+          // Aumenta la "velocidad" del gato
+          this.velocidadGato *= 1.1;
+          
+          // Limita el valor máximo de `this.velocidadGato` a un valor máximo
+          if (this.velocidadGato > 0.01) {
+            this.velocidadGato = 0.01;
+          }
+          
+          // Elimina la moneda de la escena
+          this.remove(this.models[i]);
+          this.models.splice(i, 1);
+          
+          // Sal de la iteración para evitar modificar la lista mientras la recorres
+          break;
+        }
+      }
+    }
+  
+    this.models.forEach(model => model.update());
+  
+    // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
+    let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
+    cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
+    let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
+    this.camera.position.copy(cameraPosition);
+  
+    // Hacer que la cámara mire al gato
+    this.camera.lookAt(this.models[0].position);
+    
+    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
+    this.renderer.render (this, this.getCamera());
+    // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
+    requestAnimationFrame(() => this.update());
+  }
   
 }
 
