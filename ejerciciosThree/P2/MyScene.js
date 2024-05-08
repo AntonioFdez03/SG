@@ -17,10 +17,10 @@ import { Stats } from '../libs/stats.module.js'
 //import { MyPrueba } from './prueba.js'
 //import {MyVictor} from '../ejercicio6/victor.js'
 //import { MyExamen } from './examen.js'
-//import { MyBomba } from './bomba.js'
+import { MyBomba } from './bomba.js'
 import { MyMoneda } from './moneda.js'
-//import { MyRaspa } from './raspa.js'
-//import { MyRayo } from './rayo.js'
+import { MyRaspa } from './raspa.js'
+import { MyRayo } from './rayo.js'
 //import { MyRaton } from './raton.js'
 import { MyCircuito } from './circuito.js'
 import {MyGato} from './gato.js'
@@ -37,8 +37,12 @@ class MyScene extends THREE.Scene {
     this.renderer = this.createRenderer(myCanvas);
     this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
+    
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
+    
+    this.puntos = 0;
+   
     
     this.initStats();
     this.velocidadGato = 0.0005; // Velocidad inicial del gato
@@ -124,14 +128,27 @@ class MyScene extends THREE.Scene {
     this.models[0].scale.set(0.05, 0.05, 0.05);
     this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
     for (let i = 0; i < this.curve.points.length; i++) {
-      this.models.push(new MyMoneda(this.gui, "Controles de la moneda"));
-      let lastIndex = this.models.length - 1; // Índice del último elemento añadido
-      this.models[lastIndex].scale.set(0.2, 0.2, 0.2);
+      let model;
+      let randomValue = Math.random();
+    
+      if (randomValue < 0.60) { // 60% de probabilidad de que sea una moneda
+        model = new MyMoneda(this.gui, "Controles de la moneda");
+      } else if (randomValue < 0.65) { // 5% de probabilidad de que sea un rayo
+        model = new MyRayo(this.gui, "Controles del rayo");
+      } else if (randomValue < 0.80) { // 15% de probabilidad de que sea una raspa
+        model = new MyRaspa(this.gui, "Controles de la raspa");
+      } else { // 20% de probabilidad de que sea una bomba
+        model = new MyBomba(this.gui, "Controles de la bomba");
+      }
+    
+      model.scale.set(0.2, 0.2, 0.2);
+    
+      // Añade un valor a la coordenada y para que el modelo esté por encima del tubo
+      model.position.set(this.curve.points[i].x, this.curve.points[i].y + 0.55, this.curve.points[i].z);
       
-      // Añade un valor a la coordenada y para que la moneda esté por encima del tubo
-      this.models[lastIndex].position.set(this.curve.points[i].x, this.curve.points[i].y + 0.55, this.curve.points[i].z);
-      
-      this.models[lastIndex].rotateY(Math.PI/2);
+      model.rotateY(Math.PI/2);
+    
+      this.models.push(model);
     }
     this.models.forEach(model => this.add(model));
     
@@ -258,10 +275,10 @@ class MyScene extends THREE.Scene {
     // Se definen mediante un objeto de control
     // En este caso la intensidad de la luz y si se muestran o no los ejes
     this.guiControls = {
-      // En el contexto de una función   this   alude a la función
       lightPower : 500.0,  // La potencia de esta fuente de luz se mide en lúmenes
       ambientIntensity : 0.5,   
-      axisOnOff : true
+      axisOnOff : true,
+      puntos: 0
     }
 
     // Se crea una sección para los controles de esta clase
@@ -281,10 +298,16 @@ class MyScene extends THREE.Scene {
     folder.add (this.guiControls, 'axisOnOff')
       .name ('Mostrar ejes : ')
       .onChange ( (value) => this.setAxisVisible (value) );
+
+    // Crea una nueva sección para los puntos
+    var puntosFolder = gui.addFolder('Puntos');
+
+    // Añade un control para 'puntos' y guarda la referencia en this.puntosControl
+    this.puntosControl = puntosFolder.add (this.guiControls, 'puntos').listen()
+      .name('Puntos: ');
     
     return gui;
-  }
-  
+}
   createLights () {
     // Se crea una luz ambiental, evita que se vean complentamente negras las zonas donde no incide de manera directa una fuente de luz
     // La luz ambiental solo tiene un color y una intensidad
@@ -356,6 +379,7 @@ class MyScene extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
+  
   update () {
     if (this.stats) this.stats.update();
     
@@ -382,33 +406,45 @@ class MyScene extends THREE.Scene {
     this.models[0].update();
     
     this.models[0].rotateY(Math.PI);
-  
-    // Verifica las colisiones entre el gato y las monedas
-    for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
-      // Si el modelo es una moneda
-      if (this.models[i] instanceof MyMoneda) {
-        // Calcula la distancia entre el gato y la moneda
-        let distancia = this.models[0].position.distanceTo(this.models[i].position);
-        
-        // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
-        if (distancia < 0.5) {
-          // Aumenta la "velocidad" del gato
-          this.velocidadGato *= 1.1;
-          
-          // Limita el valor máximo de `this.velocidadGato` a un valor máximo
-          if (this.velocidadGato > 0.01) {
-            this.velocidadGato = 0.01;
-          }
-          
-          // Elimina la moneda de la escena
-          this.remove(this.models[i]);
-          this.models.splice(i, 1);
-          
-          // Sal de la iteración para evitar modificar la lista mientras la recorres
-          break;
+    for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
+      // Calcula la distancia entre el gato y el modelo
+      let distancia = this.models[0].position.distanceTo(this.models[i].position);
+    
+      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
+      if (distancia < 0.5) {
+        // Si el modelo es una moneda
+        if (this.models[i] instanceof MyMoneda) {
+          // Aumenta los "puntos" en 1
+          this.puntos += 1;
+    
+          // Actualiza los puntos en la interfaz de usuario
+          this.guiControls.puntos = this.puntos;
+    
+          // Forzar la actualización de la interfaz de usuario
+          this.puntosControl.updateDisplay();
         }
+        // Si el modelo es una bomba
+        else if (this.models[i] instanceof MyBomba) {
+          // Reduce la velocidad del gato en un 25%
+          this.velocidadGato *= 0.75;
+        }
+        // Si el modelo es una raspa
+        else if (this.models[i] instanceof MyRaspa) {
+          // Aumenta la velocidad del gato en un 10%
+          this.velocidadGato *= 1.10;
+        }
+        // Si el modelo es un rayo
+        else if (this.models[i] instanceof MyRayo) {
+          // Aumenta la velocidad del gato en un 30%
+          this.velocidadGato *= 1.30;
+        }
+    
+        // Elimina el modelo de la escena
+        this.remove(this.models[i]);
+        this.models.splice(i, 1);
       }
     }
+    
   
     this.models.forEach(model => model.update());
   
