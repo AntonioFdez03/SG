@@ -406,31 +406,42 @@ class MyScene extends THREE.Scene {
     this.models[0].update();
     
     this.models[0].rotateY(Math.PI);
-  
-    // Verifica las colisiones entre el gato y las monedas
-    for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
-      // Si el modelo es una moneda
-      if (this.models[i] instanceof MyMoneda) {
-        // Calcula la distancia entre el gato y la moneda
-        let distancia = this.models[0].position.distanceTo(this.models[i].position);
-        
-        // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
-        if (distancia < 0.5) {
-          // Aumenta la "velocidad" del gato
-          this.velocidadGato *= 1.1;
-          
-          // Limita el valor máximo de `this.velocidadGato` a un valor máximo
-          if (this.velocidadGato > 0.01) {
-            this.velocidadGato = 0.01;
-          }
-          
-          // Elimina la moneda de la escena
-          this.remove(this.models[i]);
-          this.models.splice(i, 1);
-          
-          // Sal de la iteración para evitar modificar la lista mientras la recorres
-          break;
+    for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
+      // Calcula la distancia entre el gato y el modelo
+      let distancia = this.models[0].position.distanceTo(this.models[i].position);
+    
+      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
+      if (distancia < 0.5) {
+        // Si el modelo es una moneda
+        if (this.models[i] instanceof MyMoneda) {
+          // Aumenta los "puntos" en 1
+          this.puntos += 1;
+    
+          // Actualiza los puntos en la interfaz de usuario
+          this.guiControls.puntos = this.puntos;
+    
+          // Forzar la actualización de la interfaz de usuario
+          this.puntosControl.updateDisplay();
         }
+        // Si el modelo es una bomba
+        else if (this.models[i] instanceof MyBomba) {
+          // Reduce la velocidad del gato en un 25%
+          this.velocidadGato *= 0.75;
+        }
+        // Si el modelo es una raspa
+        else if (this.models[i] instanceof MyRaspa) {
+          // Aumenta la velocidad del gato en un 10%
+          this.velocidadGato *= 1.10;
+        }
+        // Si el modelo es un rayo
+        else if (this.models[i] instanceof MyRayo) {
+          // Aumenta la velocidad del gato en un 30%
+          this.velocidadGato *= 1.30;
+        }
+    
+        // Elimina el modelo de la escena
+        this.remove(this.models[i]);
+        this.models.splice(i, 1);
       }
     }
     
