@@ -109,37 +109,56 @@ class MyScene extends THREE.Scene {
     ]);
 
     // Por último creamos el modelo.
-    this.models = [];
-    this.models.push(new MyGato(this.gui, "Controles del gato"));
-    this.models[0].scale.set(0.05, 0.05, 0.05);
-    this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
-    for (let i = 0; i < this.curve.points.length; i++) {
-      let model;
-      let randomValue = Math.random();
-    
-      if (randomValue < 0.60) { // 60% de probabilidad de que sea una moneda
-        model = new MyMoneda(this.gui, "Controles de la moneda");
-      } else if (randomValue < 0.65) { // 5% de probabilidad de que sea un rayo
-        model = new MyRayo(this.gui, "Controles del rayo");
-      } else if (randomValue < 0.80) { // 15% de probabilidad de que sea una raspa
-        model = new MyRaspa(this.gui, "Controles de la raspa");
-      } else { // 20% de probabilidad de que sea una bomba
-        model = new MyBomba(this.gui, "Controles de la bomba");
-      }
-    
-      model.scale.set(0.2, 0.2, 0.2);
-    
-      // Añade un valor a la coordenada y para que el modelo esté por encima del tubo
-      model.position.set(this.curve.points[i].x, this.curve.points[i].y + 0.55, this.curve.points[i].z);
-      
-      model.rotateY(Math.PI/2);
-    
-      this.models.push(model);
-    }
+    // Por último creamos el modelo.
+this.models = [];
+this.models.push(new MyGato(this.gui, "Controles del gato"));
+this.models[0].scale.set(0.05, 0.05, 0.05);
+this.models.push(new MyCircuito(this.gui, "Controles del circuito", this.curve));
+
+let positions = [
+  { x: 0, y: 0.55, z: 0 }, // Arriba
+  { x: -0.55, y: 0, z: 0 }, // Izquierda
+  { x: 0, y: -0.55, z: 0 }, // Abajo
+  { x: 0.55, y: 0, z: 0 }  // Derecha
+];
+
+for (let i = 0; i < this.curve.points.length; i++) {
+  let model;
+  let randomValue = Math.random();
+
+  if (randomValue < 0.60) { // 60% de probabilidad de que sea una moneda
+    model = new MyMoneda(this.gui, "Controles de la moneda");
+  } else if (randomValue < 0.65) { // 5% de probabilidad de que sea un rayo
+    model = new MyRayo(this.gui, "Controles del rayo");
+  /*} else if (randomValue < 0.80) { // 15% de probabilidad de que sea una raspa
+    model = new MyRaspa(this.gui, "Controles de la raspa");
+  */ } else { // 20% de probabilidad de que sea una bomba
+    model = new MyBomba(this.gui, "Controles de la bomba");
+  }
+
+  model.scale.set(0.2, 0.2, 0.2);
+
+  // Añade un valor a la coordenada y para que el modelo esté por encima del tubo
+  // Usa el módulo de i con 4 para rotar entre las cuatro posiciones cada dos objetos
+  let positionIndex = Math.floor(i / 2) % 4;
+
+  model.position.set(
+    this.curve.points[i].x + positions[Math.floor(i / 2) % 4].x,
+    this.curve.points[i].y + positions[Math.floor(i / 2) % 4].y,
+    this.curve.points[i].z
+  );
+
+  if (positionIndex === 2) {
+    model.rotateX(Math.PI);
+  }
+
+  model.rotateY(Math.PI/2);
+
+  this.models.push(model);
+}
     this.models.forEach(model => this.add(model));
     
     this.models[0].rotation.y = Math.PI;
-    
     this.t = 0;
 
     this.leftArrowDown = false;
@@ -412,10 +431,10 @@ class MyScene extends THREE.Scene {
           this.velocidadGato *= 0.75;
         }
         // Si el modelo es una raspa
-        else if (this.models[i] instanceof MyRaspa) {
+       /* else if (this.models[i] instanceof MyRaspa) {
           // Aumenta la velocidad del gato en un 10%
           this.velocidadGato *= 1.10;
-        }
+        }*/
         // Si el modelo es un rayo
         else if (this.models[i] instanceof MyRayo) {
           // Aumenta la velocidad del gato en un 30%
@@ -431,14 +450,14 @@ class MyScene extends THREE.Scene {
     this.models.forEach(model => model.update());
   
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-    let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
+   /* let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
     cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
     let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
     this.camera.position.copy(cameraPosition);
   
     // Hacer que la cámara mire al gato
     this.camera.lookAt(this.models[0].position);
-    
+    */
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
