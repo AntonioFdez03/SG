@@ -37,6 +37,7 @@ class MyScene extends THREE.Scene {
     this.renderer = this.createRenderer(myCanvas);
     this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
+    
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
     
@@ -44,6 +45,7 @@ class MyScene extends THREE.Scene {
    
     
     this.initStats();
+    this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
     // Construimos los distinos elementos que tendremos en la escena
     this.createLights ();
@@ -153,13 +155,11 @@ class MyScene extends THREE.Scene {
     this.models[0].rotation.y = Math.PI;
     
     this.t = 0;
-    this.velocidadGato = 0.0001; // Velocidad inicial del gato
 
     this.leftArrowDown = false;
     this.rightArrowDown = false;
     this.rotationZ=0;
     this.angle = 0;
-    
 
     // Definimos un vector de desplazamiento
     this.displacement = new THREE.Vector3();
@@ -172,7 +172,7 @@ class MyScene extends THREE.Scene {
           let localDisplacement = new THREE.Vector3(0.1, 0, 0); // Por ejemplo, mover a la izquierda
           localDisplacement.applyQuaternion(this.models[0].quaternion);
 
-          this.rotationZ -= 0.193;
+          this.rotationZ -= 0.2;
           // Actualizar el desplazamiento global
           this.displacement.add(localDisplacement);
       } else if (event.key === 'ArrowRight') {
@@ -185,7 +185,7 @@ class MyScene extends THREE.Scene {
           
           // Actualizar el desplazamiento global
           this.displacement.add(localDisplacement);
-          this.rotationZ += 0.193;
+          this.rotationZ += 0.2;
       }
   });
   
@@ -393,10 +393,7 @@ class MyScene extends THREE.Scene {
   
     // Calcular la tangente de la curva en este punto
     let tangent = this.curve.getTangentAt(this.t).normalize();
-    
-    // Aplicar el desplazamiento
-    position.add(this.displacement);
-
+  
     // Ajustar la posición del gato
     this.models[0].position.copy(position);
   
@@ -409,31 +406,42 @@ class MyScene extends THREE.Scene {
     this.models[0].update();
     
     this.models[0].rotateY(Math.PI);
-  
-    // Verifica las colisiones entre el gato y las monedas
-    for (let i = 1; i < this.models.length; i++) { // Comienza en 1 para saltar el gato
-      // Si el modelo es una moneda
-      if (this.models[i] instanceof MyMoneda) {
-        // Calcula la distancia entre el gato y la moneda
-        let distancia = this.models[0].position.distanceTo(this.models[i].position);
-        
-        // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
-        if (distancia < 0.5) {
-          // Aumenta la "velocidad" del gato
-          this.velocidadGato *= 1.1;
-          
-          // Limita el valor máximo de `this.velocidadGato` a un valor máximo
-          if (this.velocidadGato > 0.01) {
-            this.velocidadGato = 0.01;
-          }
-          
-          // Elimina la moneda de la escena
-          this.remove(this.models[i]);
-          this.models.splice(i, 1);
-          
-          // Sal de la iteración para evitar modificar la lista mientras la recorres
-          break;
+    for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
+      // Calcula la distancia entre el gato y el modelo
+      let distancia = this.models[0].position.distanceTo(this.models[i].position);
+    
+      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
+      if (distancia < 0.5) {
+        // Si el modelo es una moneda
+        if (this.models[i] instanceof MyMoneda) {
+          // Aumenta los "puntos" en 1
+          this.puntos += 1;
+    
+          // Actualiza los puntos en la interfaz de usuario
+          this.guiControls.puntos = this.puntos;
+    
+          // Forzar la actualización de la interfaz de usuario
+          this.puntosControl.updateDisplay();
         }
+        // Si el modelo es una bomba
+        else if (this.models[i] instanceof MyBomba) {
+          // Reduce la velocidad del gato en un 25%
+          this.velocidadGato *= 0.75;
+        }
+        // Si el modelo es una raspa
+        else if (this.models[i] instanceof MyRaspa) {
+          // Aumenta la velocidad del gato en un 10%
+          this.velocidadGato *= 1.10;
+        }
+        // Si el modelo es un rayo
+        else if (this.models[i] instanceof MyRayo) {
+          // Aumenta la velocidad del gato en un 30%
+          this.velocidadGato *= 1.30;
+        }
+    
+        // Elimina el modelo de la escena
+        this.remove(this.models[i]);
+        this.models.splice(i, 1);
       }
     }
     
