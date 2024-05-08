@@ -393,7 +393,8 @@ class MyScene extends THREE.Scene {
   
     // Calcular la tangente de la curva en este punto
     let tangent = this.curve.getTangentAt(this.t).normalize();
-  
+    
+    position.add(this.displacement);  
     // Ajustar la posición del gato
     this.models[0].position.copy(position);
   
@@ -406,6 +407,8 @@ class MyScene extends THREE.Scene {
     this.models[0].update();
     
     this.models[0].rotateY(Math.PI);
+    this.models[0].rotateZ(this.rotationZ);
+
     for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
       // Calcula la distancia entre el gato y el modelo
       let distancia = this.models[0].position.distanceTo(this.models[i].position);
