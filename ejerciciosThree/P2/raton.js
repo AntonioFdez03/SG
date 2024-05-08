@@ -62,19 +62,32 @@ class MyRaton extends THREE.Object3D {
 
         // Crear un grupo
     var group = new THREE.Group();
+// Añadir todos los objetos al grupo
+group.add(cabeza_M);
+group.add(morro_M);
+group.add(nariz_M);
+group.add(ojo_M);
+group.add(ojo2_M);
+group.add(oreja_M);
+group.add(oreja2_M);
+group.add(torus_M);
+group.add(tapa_M);
+group.add(torus2_M);
+group.add(tapa2_M);
 
-    // Añadir todos los objetos al grupo
-    group.add(cabeza_M);
-    group.add(morro_M);
-    group.add(nariz_M);
-    group.add(ojo_M);
-    group.add(ojo2_M);
-    group.add(oreja_M);
-    group.add(oreja2_M);
-    group.add(torus_M);
-    group.add(tapa_M);
-    group.add(torus2_M);
-    group.add(tapa2_M);
+// Asegurarte de que cada malla tiene una referencia al grupo del ratón
+cabeza_M.userData.raton = group;
+morro_M.userData.raton = group;
+nariz_M.userData.raton = group;
+ojo_M.userData.raton = group;
+ojo2_M.userData.raton = group;
+oreja_M.userData.raton = group;
+oreja2_M.userData.raton = group;
+torus_M.userData.raton = group;
+tapa_M.userData.raton = group;
+torus2_M.userData.raton = group;
+tapa2_M.userData.raton = group;
+
 
     // Añadir el grupo al objeto 3D
     this.add(group);

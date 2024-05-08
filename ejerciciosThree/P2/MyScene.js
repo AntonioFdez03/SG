@@ -11,7 +11,7 @@ import { MyBomba } from './bomba.js'
 import { MyMoneda } from './moneda.js'
 import { MyRaspa } from './raspa.js'
 import { MyRayo } from './rayo.js'
-//import { MyRaton } from './raton.js'
+import { MyRaton } from './raton.js'
 import { MyCircuito } from './circuito.js'
 import {MyGato} from './gato.js'
 /// La clase fachada del modelo
@@ -156,6 +156,21 @@ for (let i = 0; i < this.curve.points.length; i++) {
 
   this.models.push(model);
 }
+
+this.ratones = [];
+for (let i = 0; i < 15; i++) {
+  let raton = new MyRaton(this.gui, "Controles del ratón");
+  raton.scale.set(0.2, 0.2, 0.2);
+  // Posicionar el ratón en un punto aleatorio cerca del tubo
+  let point = this.curve.getPoint(Math.random());
+  raton.position.set(point.x, point.y + 1, point.z); // Ajusta el valor "1" para cambiar la altura
+  this.ratones.push(raton);
+  this.add(raton);
+}
+
+this.raycaster = new THREE.Raycaster();
+this.mouse = new THREE.Vector2();
+
     this.models.forEach(model => this.add(model));
     
     this.models[0].rotation.y = Math.PI;
@@ -202,6 +217,39 @@ for (let i = 0; i < this.curve.points.length; i++) {
           // Marcar la tecla derecha como no presionada
           this.rightArrowDown = false;
       }
+  });
+
+  window.addEventListener('mousedown', (event) => {
+    // Solo procede si el botón central del ratón fue presionado
+    if (event.button === 1) {
+      // Actualiza el vector del mouse con las coordenadas del clic del mouse
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+      // Actualiza el raycaster con la posición de la cámara y la dirección del mouse
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+  
+      // Calcula los objetos que intersectan con el rayo
+      let intersects = this.raycaster.intersectObjects(this.ratones, true);
+  
+      // Si hay alguna intersección
+      if (intersects.length > 0) {
+        // El primer objeto intersectado es el más cercano
+        let closest = intersects[0].object;
+  
+        // Obtén el grupo del ratón
+        let raton = closest.parent;
+  
+        // Elimina el ratón de la escena
+        this.remove(raton);
+  
+        // Encuentra el índice del ratón en el array de ratones
+        let index = this.ratones.indexOf(raton);
+  
+        // Elimina el ratón del array de ratones
+        if (index !== -1) this.ratones.splice(index, 1);
+      }
+    }
   });
   }
 
@@ -378,7 +426,6 @@ for (let i = 0; i < this.curve.points.length; i++) {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
-  
   update () {
     if (this.stats) this.stats.update();
     
@@ -407,7 +454,7 @@ for (let i = 0; i < this.curve.points.length; i++) {
     
     this.models[0].rotateY(Math.PI);
     this.models[0].rotateZ(this.rotationZ);
-
+  
     for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
       // Calcula la distancia entre el gato y el modelo
       let distancia = this.models[0].position.distanceTo(this.models[i].position);
@@ -446,18 +493,24 @@ for (let i = 0; i < this.curve.points.length; i++) {
         this.models.splice(i, 1);
       }
     }
-
+  
     this.models.forEach(model => model.update());
   
+    // Actualizar la rotación de cada ratón para que apunte al gato
+    let gatoPosition = this.models[0].position;
+    this.ratones.forEach(raton => {
+      raton.lookAt(gatoPosition);
+    });
+  
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-   /* let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
+    let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
     cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
     let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
     this.camera.position.copy(cameraPosition);
   
     // Hacer que la cámara mire al gato
     this.camera.lookAt(this.models[0].position);
-    */
+    
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
