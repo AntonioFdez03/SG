@@ -7,16 +7,6 @@ import { Stats } from '../libs/stats.module.js'
 
 // Clases de mi proyecto
 
-
-//import {MyTaza} from './taza.js'
-//import {MyTuerca} from './tuerca.js'
-//import {MyPieza} from './pieza.js'
-//import {MyOriginal} from './original.js'
-//import { MyExamen } from './examen.js'
-//import {MyExamen2} from './examen2.js'
-//import { MyPrueba } from './prueba.js'
-//import {MyVictor} from '../ejercicio6/victor.js'
-//import { MyExamen } from './examen.js'
 import { MyBomba } from './bomba.js'
 import { MyMoneda } from './moneda.js'
 import { MyRaspa } from './raspa.js'
@@ -117,10 +107,6 @@ class MyScene extends THREE.Scene {
             new THREE.Vector3(2, 0, 2),
             new THREE.Vector3(5, 0, 0),//Fin circuito
     ]);
-    
-
-    // Crear un objeto para seguir la posición del gato a lo largo de la curva
-    
 
     // Por último creamos el modelo.
     this.models = [];
@@ -192,20 +178,14 @@ class MyScene extends THREE.Scene {
   document.addEventListener('keyup', (event) => {
       if (event.key === 'ArrowLeft') {
           // Marcar la tecla izquierda como no presionada
-          this.leftArrowDown = false;
-          // Restaurar el desplazamiento cuando se suelta la tecla
-          
+          this.leftArrowDown = false;       
       } else if (event.key === 'ArrowRight') {
           // Marcar la tecla derecha como no presionada
           this.rightArrowDown = false;
-          // Restaurar el desplazamiento cuando se suelta la tecla
-        
       }
   });
   }
 
-  
-  
   initStats() {
   
     var stats = new Stats();
@@ -447,8 +427,7 @@ class MyScene extends THREE.Scene {
         this.models.splice(i, 1);
       }
     }
-    
-  
+
     this.models.forEach(model => model.update());
   
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
