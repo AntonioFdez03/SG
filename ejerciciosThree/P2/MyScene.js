@@ -164,10 +164,14 @@ for (let i = 0; i < 15; i++) {
   // Posicionar el ratón en un punto aleatorio cerca del tubo
   let point = this.curve.getPoint(Math.random());
   raton.position.set(point.x, point.y + 1, point.z); // Ajusta el valor "1" para cambiar la altura
-  this.ratones.push(raton);
+  // Añade todas las mallas del ratón a this.ratones
+  raton.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      this.ratones.push(child);
+    }
+  });
   this.add(raton);
 }
-
 this.raycaster = new THREE.Raycaster();
 this.mouse = new THREE.Vector2();
 
@@ -219,34 +223,34 @@ this.mouse = new THREE.Vector2();
       }
   });
 
+
+  // Evento mousedown para detectar clics en ratones
   window.addEventListener('mousedown', (event) => {
-    // Solo procede si el botón central del ratón fue presionado
     if (event.button === 1) {
-      // Actualiza el vector del mouse con las coordenadas del clic del mouse
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-      // Actualiza el raycaster con la posición de la cámara y la dirección del mouse
+
       this.raycaster.setFromCamera(this.mouse, this.camera);
-  
-      // Calcula los objetos que intersectan con el rayo
+
       let intersects = this.raycaster.intersectObjects(this.ratones, true);
-  
-      // Si hay alguna intersección
+
       if (intersects.length > 0) {
-        // El primer objeto intersectado es el más cercano
         let closest = intersects[0].object;
-  
-        // Obtén el grupo del ratón
         let raton = closest.parent;
-  
-        // Elimina el ratón de la escena
+
+        // Eliminar completamente el ratón
+        while (raton.children.length > 0) {
+          let child = raton.children[0];
+          raton.remove(child);
+          child.geometry.dispose();
+          child.material.dispose();
+        }
+
+        // Eliminar el grupo del ratón de la escena
         this.remove(raton);
-  
-        // Encuentra el índice del ratón en el array de ratones
+
+        // Eliminar el ratón del array de ratones
         let index = this.ratones.indexOf(raton);
-  
-        // Elimina el ratón del array de ratones
         if (index !== -1) this.ratones.splice(index, 1);
       }
     }
