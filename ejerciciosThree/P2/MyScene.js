@@ -25,17 +25,11 @@ class MyScene extends THREE.Scene {
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
-    this.velocidadGato = 0.0005; // Velocidad inicial del gato
-    
     
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
-    
-    this.puntos = 0;
    
-    
     this.initStats();
-    this.velocidadGato = 0.0005; // Velocidad inicial del gato
     
     // Construimos los distinos elementos que tendremos en la escena
     this.createLights ();
@@ -178,18 +172,24 @@ this.mouse = new THREE.Vector2();
     this.models.forEach(model => this.add(model));
     
     this.models[0].rotation.y = Math.PI;
-    this.t = 0;
 
+    this.velocidadGato = 0.0005;
+    this.t = 0;
     this.leftArrowDown = false;
     this.rightArrowDown = false;
     this.rotationZ=0;
-    this.angle = 0;
-
+    this.puntos = 0;
+    this.camara_gato = true;
+    
     document.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
           this.rotationZ -= 0.2;
       } else if (event.key === 'ArrowRight') {
           this.rotationZ += 0.2;
+      }
+
+      if( event.key === ' ' ){
+        this.camara_gato = !this.camara_gato;
       }
   });
   
@@ -495,16 +495,18 @@ this.mouse = new THREE.Vector2();
         raton.lookAt(gatoPosition);
     });
 
-    // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-    let cameraOffset = tangent.clone().multiplyScalar(0.3); // Ajustado a -0.3 para colocar la cámara detrás del gato
-    cameraOffset.y += 0.7; // Ajusta la cámara un poco más alta
-    let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
-    this.camera.position.copy(cameraPosition);
+    if( this.camara_gato ){
+      // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
+      let cameraOffset = tangent.clone().multiplyScalar(0.3); // Ajustado a -0.3 para colocar la cámara detrás del gato
+      cameraOffset.y += 0.7; // Ajusta la cámara un poco más alta
+      let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
+      this.camera.position.copy(cameraPosition);
 
-    // Hacer que la cámara mire en la misma dirección que el gato pero un poco más inclinada hacia arriba
-    let lookAtPosition = this.models[0].position.clone().add(tangent.negate());
-    lookAtPosition.y += 0.4; // Ajusta la dirección de la cámara un poco más hacia arriba
-    this.camera.lookAt(lookAtPosition);
+      // Hacer que la cámara mire en la misma dirección que el gato pero un poco más inclinada hacia arriba
+      let lookAtPosition = this.models[0].position.clone().add(tangent.negate());
+      lookAtPosition.y += 0.4; // Ajusta la dirección de la cámara un poco más hacia arriba
+      this.camera.lookAt(lookAtPosition);
+    }
     
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
