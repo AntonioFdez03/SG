@@ -185,30 +185,10 @@ this.mouse = new THREE.Vector2();
     this.rotationZ=0;
     this.angle = 0;
 
-    // Definimos un vector de desplazamiento
-    this.displacement = new THREE.Vector3();
-
     document.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
-          // Marcar la tecla izquierda como presionada
-          this.leftArrowDown = true;
-          // Calcular el vector de desplazamiento en el sistema de coordenadas locales del gato
-          let localDisplacement = new THREE.Vector3(0.1, 0, 0); // Por ejemplo, mover a la izquierda
-          localDisplacement.applyQuaternion(this.models[0].quaternion);
-
           this.rotationZ -= 0.2;
-          // Actualizar el desplazamiento global
-          this.displacement.add(localDisplacement);
       } else if (event.key === 'ArrowRight') {
-          // Marcar la tecla derecha como presionada
-          this.rightArrowDown = true;
-
-          // Calcular el vector de desplazamiento en el sistema de coordenadas locales del gato
-          let localDisplacement = new THREE.Vector3(-0.1, 0, 0); // Por ejemplo, mover a la derecha
-          localDisplacement.applyQuaternion(this.models[0].quaternion);
-          
-          // Actualizar el desplazamiento global
-          this.displacement.add(localDisplacement);
           this.rotationZ += 0.2;
       }
   });
@@ -444,15 +424,12 @@ this.mouse = new THREE.Vector2();
     // Calcular la tangente de la curva en este punto
     let tangent = this.curve.getTangentAt(this.t).normalize();
     
-    position.add(this.displacement);  
     // Ajustar la posición del gato
     this.models[0].position.copy(position);
   
     // Hacer que el gato mire en la dirección en la que se está moviendo
     this.models[0].lookAt(position.clone().add(tangent));
   
-    // Mover el gato 0.5 unidades en su eje Y local
-    this.models[0].translateY(0.515);
     // Se actualiza el resto del modelo
     this.models[0].update();
     
@@ -516,13 +493,15 @@ this.mouse = new THREE.Vector2();
     });
 
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-    let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
-    cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
+    let cameraOffset = tangent.clone().multiplyScalar(0.3); // Ajustado a -0.3 para colocar la cámara detrás del gato
+    cameraOffset.y += 0.7; // Ajusta la cámara un poco más alta
     let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
     this.camera.position.copy(cameraPosition);
 
-    // Hacer que la cámara mire al gato
-    this.camera.lookAt(this.models[0].position);
+    // Hacer que la cámara mire en la misma dirección que el gato pero un poco más inclinada hacia arriba
+    let lookAtPosition = this.models[0].position.clone().add(tangent.negate());
+    lookAtPosition.y += 0.4; // Ajusta la dirección de la cámara un poco más hacia arriba
+    this.camera.lookAt(lookAtPosition);
     
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"

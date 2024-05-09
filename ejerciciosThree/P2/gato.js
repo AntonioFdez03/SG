@@ -256,9 +256,12 @@ class MyGato extends THREE.Object3D {
         skate.add(soporteEje1_M);
         skate.add(soporteEje2_M);
 
-        this.add(gato);
-        this.add(skate);
-        
+        var gato_skate = new THREE.Group();
+        gato_skate.add(gato);
+        gato_skate.add(skate);
+
+        gato_skate.position.set(0,10.3,0);
+        this.add(gato_skate);
     }
 
     createGUI (gui,titleGui) {
