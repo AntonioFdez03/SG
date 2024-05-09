@@ -203,8 +203,6 @@ this.mouse = new THREE.Vector2();
       }
   });
 
-
-  // Evento mousedown para detectar clics en ratones
   window.addEventListener('mousedown', (event) => {
     if (event.button === 1) {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -232,9 +230,14 @@ this.mouse = new THREE.Vector2();
         // Eliminar el ratón del array de ratones
         let index = this.ratones.indexOf(raton);
         if (index !== -1) this.ratones.splice(index, 1);
+
+        // Aumentar los puntos en 5 por cada ratón eliminado
+        this.puntos += 5;
+        this.guiControls.puntos = this.puntos; // Actualiza la propiedad de puntos en la interfaz de usuario
+        console.log(`Puntos: ${this.puntos}`); // Muestra los puntos en la consola
       }
     }
-  });
+});
   }
 
   initStats() {
