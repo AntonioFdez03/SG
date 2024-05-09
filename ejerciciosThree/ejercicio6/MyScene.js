@@ -11,6 +11,7 @@ import { Stats } from '../libs/stats.module.js'
 
 //import { MyModelo } from './modelo.js'
 import { MyVictor } from './victor.js'
+import { MyMoneda } from './moneda.js'
  
 /// La clase fachada del modelo
 /**
@@ -51,12 +52,7 @@ class MyScene extends THREE.Scene {
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
     this.models = [];
-  
-    //this.models.push(new MyTaza(this.gui, "Controles de la Taza"));
-    //this.models.push(new MyTuerca(this.gui, "Controles de la Tuerca"));
-    //this.models.push(new MyPieza(this.gui, "Controles de la Pieza"));
-    //this.models.push(new MyModelo(this.gui, "Controles del modelo"));
-    this.models.push(new MyVictor(this.gui, "Controles del modelo"));
+    this.models.push(new MyMoneda(this.gui, "Controles del modelo"));
     this.models.forEach(model => this.add(model));
   
   }

@@ -7,12 +7,6 @@ class MyGato extends THREE.Object3D {
 
         this.createGUI(gui,titleGui);
         
-        //Cámara del gato
-        this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        //this.camera.position.set(0, 0, -1);
-        //this.camera.lookAt(0, 0.1, 0);
-        this.add(this.camera);
-
         // Crear geometrías
         //Gato
         var cabeza = new THREE.SphereGeometry(0.5,32,32);
