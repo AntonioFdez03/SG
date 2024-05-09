@@ -459,67 +459,77 @@ this.mouse = new THREE.Vector2();
     this.models[0].rotateY(Math.PI);
     this.models[0].rotateZ(this.rotationZ);
   
+    // Crear una caja de límites para el gato
+    let gatoBox = new THREE.Box3().setFromObject(this.models[0]);
+
     for (let i = this.models.length - 1; i >= 1; i--) { // Comienza desde el final y salta el gato
-      // Calcula la distancia entre el gato y el modelo
-      let distancia = this.models[0].position.distanceTo(this.models[i].position);
-    
-      // Si la distancia es menor que un cierto umbral, asumimos que hay una colisión
-      if (distancia < 0.5) {
-        // Si el modelo es una moneda
-        if (this.models[i] instanceof MyMoneda) {
-          // Aumenta los "puntos" en 1
-          this.puntos += 1;
-    
-          // Actualiza los puntos en la interfaz de usuario
-          this.guiControls.puntos = this.puntos;
-    
-          // Forzar la actualización de la interfaz de usuario
-          this.puntosControl.updateDisplay();
-        }
-        // Si el modelo es una bomba
-        else if (this.models[i] instanceof MyBomba) {
-          // Reduce la velocidad del gato en un 25%
-          this.velocidadGato *= 0.75;
-        }
-        // Si el modelo es una raspa
-       /* else if (this.models[i] instanceof MyRaspa) {
-          // Aumenta la velocidad del gato en un 10%
-          this.velocidadGato *= 1.10;
-        }*/
-        // Si el modelo es un rayo
-        else if (this.models[i] instanceof MyRayo) {
-          // Aumenta la velocidad del gato en un 30%
-          this.velocidadGato *= 1.30;
-        }
-    
-        // Elimina el modelo de la escena
-        this.remove(this.models[i]);
-        this.models.splice(i, 1);
+        // Crear una caja de límites para el modelo actual
+        let modelBox = new THREE.Box3().setFromObject(this.models[i]);
+
+        // Si las cajas se intersectan, asumimos que hay una colisión
+        if (gatoBox.intersectsBox(modelBox)) {
+          // Si el modelo es una moneda
+          if (this.models[i] instanceof MyMoneda) {
+              // Aumenta los "puntos" en 1
+              this.puntos += 1;
+      
+              // Actualiza los puntos en la interfaz de usuario
+              this.guiControls.puntos = this.puntos;
+      
+              // Forzar la actualización de la interfaz de usuario
+              this.puntosControl.updateDisplay();
+          }
+          // Si el modelo es una bomba
+          else if (this.models[i] instanceof MyBomba) {
+              // Reduce la velocidad del gato en un 25%
+              this.velocidadGato *= 0.75;
+          }
+          // Si el modelo es un rayo
+          else if (this.models[i] instanceof MyRayo) {
+              // Aumenta la velocidad del gato en un 30%
+              this.velocidadGato *= 1.30;
+          }
+      
+          // Si el modelo no es el circuito
+          if (!(this.models[i] instanceof MyCircuito)) {
+              // Elimina el modelo de la escena
+              this.remove(this.models[i]);
+              this.models.splice(i, 1);
+          }
       }
     }
-  
+
     this.models.forEach(model => model.update());
-  
+
     // Actualizar la rotación de cada ratón para que apunte al gato
     let gatoPosition = this.models[0].position;
+    this.ratonTime = (this.ratonTime || 0) + 0.01; // Ajusta la velocidad de oscilación aquí
     this.ratones.forEach(raton => {
-      raton.lookAt(gatoPosition);
+        // Calcula una posición de oscilación
+        let oscilacion = Math.sin(this.ratonTime) * 0.05; // Ajusta la distancia de oscilación aquí
+
+        // Ajusta la posición del ratón
+        raton.position.x += oscilacion;
+
+        // Hacer que el ratón mire al gato
+        raton.lookAt(gatoPosition);
     });
-  
+
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
     let cameraOffset = tangent.clone().multiplyScalar(0.5); // Ajustado a 0.5 para colocar la cámara detrás del gato
     cameraOffset.y += 0.1; // Ajusta la cámara un poco más baja
     let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
     this.camera.position.copy(cameraPosition);
-  
+
     // Hacer que la cámara mire al gato
     this.camera.lookAt(this.models[0].position);
     
+
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     requestAnimationFrame(() => this.update());
-  }
+}
   
 }
 
