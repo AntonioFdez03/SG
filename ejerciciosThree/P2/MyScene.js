@@ -158,19 +158,28 @@ for (let i = 0; i < this.curve.points.length; i++) {
 }
 
 this.ratones = [];
-for (let i = 0; i < 15; i++) {
-  let raton = new MyRaton(this.gui, "Controles del ratón");
-  raton.scale.set(0.2, 0.2, 0.2);
-  // Posicionar el ratón en un punto aleatorio cerca del tubo
-  let point = this.curve.getPoint(Math.random());
-  raton.position.set(point.x, point.y + 1, point.z); // Ajusta el valor "1" para cambiar la altura
-  // Añade todas las mallas del ratón a this.ratones
-  raton.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      this.ratones.push(child);
-    }
-  });
-  this.add(raton);
+
+// Define las posiciones para los ratones a lo largo de la curva (entre 0 y 1)
+let posiciones = [0, 0.07, 0.14, 0.21, 0.28, 0.35, 0.42, 0.49, 0.56, 0.63, 0.7, 0.77, 0.84,  1];
+
+for (let i = 0; i < posiciones.length; i++) {
+    let raton = new MyRaton(this.gui, "Controles del ratón");
+    raton.scale.set(0.2, 0.2, 0.2);
+
+    // Posicionar el ratón en la posición correspondiente de la curva
+    let point = this.curve.getPointAt(posiciones[i]);
+    raton.position.set(point.x, point.y + 1, point.z); // Ajusta el valor "1" para cambiar la altura
+
+    // Añade todas las mallas del ratón a this.ratones
+    raton.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            this.ratones.push(child);
+        }
+    });
+
+    this.add(raton);
+
+    
 }
 this.raycaster = new THREE.Raycaster();
 this.mouse = new THREE.Vector2();
@@ -496,16 +505,17 @@ this.mouse = new THREE.Vector2();
     });
 
     // Actualizar la posición de la cámara para que siga al gato desde atrás y un poco por encima
-    let cameraOffset = tangent.clone().multiplyScalar(0.3); // Ajustado a -0.3 para colocar la cámara detrás del gato
+   /* let cameraOffset = tangent.clone().multiplyScalar(0.3); // Ajustado a -0.3 para colocar la cámara detrás del gato
     cameraOffset.y += 0.7; // Ajusta la cámara un poco más alta
     let cameraPosition = new THREE.Vector3().addVectors(this.models[0].position, cameraOffset);
     this.camera.position.copy(cameraPosition);
 
+    
     // Hacer que la cámara mire en la misma dirección que el gato pero un poco más inclinada hacia arriba
     let lookAtPosition = this.models[0].position.clone().add(tangent.negate());
-    lookAtPosition.y += 0.4; // Ajusta la dirección de la cámara un poco más hacia arriba
+   lookAtPosition.y += 0.4; // Ajusta la dirección de la cámara un poco más hacia arriba
     this.camera.lookAt(lookAtPosition);
-    
+    */
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
