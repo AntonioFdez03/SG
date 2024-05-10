@@ -33,7 +33,7 @@ class MyScene extends THREE.Scene {
     this.axis = new THREE.AxesHelper (2);
     this.add (this.axis);
     //Variables para el juego
-    this.velocidadGato = 0.001;
+    this.velocidadGato = 0.0005;
     this.t = 0;
     this.rotationZ=0;
     this.puntos = 0;
@@ -168,10 +168,10 @@ class MyScene extends THREE.Scene {
 
   EventosTeclado() {
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft') {
+      if (event.key === 'a'||event.key === 'A') {
           // Marcar la tecla izquierda como no presionada
           this.rotationZ -= 0.1;      
-      } else if (event.key === 'ArrowRight') {
+      } else if (event.key === 'd'|| event.key === 'D'){
           // Marcar la tecla derecha como no presionada
           this.rotationZ += 0.1;
       }
@@ -393,6 +393,12 @@ class MyScene extends THREE.Scene {
           else if (this.models[i] instanceof MyRayo) {
               // Aumenta la velocidad del gato en un 30%
               this.velocidadGato *= 1.30;
+
+              this.puntos += 10;
+              // Actualiza los puntos en la interfaz de usuario
+              this.guiControls.puntos = this.puntos;
+              // Forzar la actualización de la interfaz de usuario
+              this.puntosControl.updateDisplay();
           }
           // Si el modelo no es el circuito
           if (!(this.models[i] instanceof MyCircuito)) {
