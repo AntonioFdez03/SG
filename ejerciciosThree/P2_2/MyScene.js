@@ -130,6 +130,13 @@ class MyScene extends THREE.Scene {
       if (positionIndex === 2) {
         model.rotateX(Math.PI);
       }
+      
+      if (positionIndex === 1) {
+        model.rotateZ(+Math.PI/2);
+      }
+      if (positionIndex === 3) {
+        model.rotateZ(-Math.PI/2);
+      }
       model.rotateY(Math.PI/2);
       this.models.push(model);
     }
@@ -376,6 +383,11 @@ class MyScene extends THREE.Scene {
           else if (this.models[i] instanceof MyBomba) {
               // Reduce la velocidad del gato en un 25%
               this.velocidadGato *= 0.75;
+              this.puntos -= 5;
+              // Actualiza los puntos en la interfaz de usuario
+              this.guiControls.puntos = this.puntos;
+              // Forzar la actualización de la interfaz de usuario
+              this.puntosControl.updateDisplay();
           }
           // Si el modelo es un rayo
           else if (this.models[i] instanceof MyRayo) {
