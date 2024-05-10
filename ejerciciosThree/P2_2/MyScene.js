@@ -392,7 +392,7 @@ class MyScene extends THREE.Scene {
           // Si el modelo es un rayo
           else if (this.models[i] instanceof MyRayo) {
               // Aumenta la velocidad del gato en un 30%
-              this.velocidadGato *= 1.30;
+              this.velocidadGato *= 1.50;
 
               this.puntos += 10;
               // Actualiza los puntos en la interfaz de usuario
