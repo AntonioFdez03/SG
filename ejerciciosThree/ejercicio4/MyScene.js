@@ -11,6 +11,7 @@ import { Stats } from '../libs/stats.module.js'
 
 import {MyCora} from './MyCora.js'
 import {MyTrebol} from './MyTrebol.js'
+import { MyGato } from './GatoPrueba.js'
  
 /// La clase fachada del modelo
 /**
@@ -53,7 +54,8 @@ class MyScene extends THREE.Scene {
     this.models = [];
   
     //this.models.push(new MyCora(this.gui, "Controles de la Ficha"));
-    this.models.push(new MyTrebol(this.gui, "Controles del Trebol"));
+    //this.models.push(new MyTrebol(this.gui, "Controles de la Ficha"));
+    this.models.push(new MyGato(this.gui, "Controles de la Ficha"));
     this.models.forEach(model => this.add(model));
   
   }

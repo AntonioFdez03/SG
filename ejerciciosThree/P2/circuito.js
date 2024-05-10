@@ -38,15 +38,15 @@ class MyCircuito extends THREE.Object3D {
             new THREE.Vector3(6, 9, 10),
             new THREE.Vector3(7, 9.5, 7),
             new THREE.Vector3(10, 10, 5),//Fin espiral 
-            new THREE.Vector3(15, 10, 5),//Inicio looping
+            new THREE.Vector3(15, 10, 5), // Inicio looping
             new THREE.Vector3(18, 12, 4),
-            new THREE.Vector3(19, 15, 3),//Punto mas a la derecha del looping
-            new THREE.Vector3(18, 18, 2),
-            new THREE.Vector3(15, 19, 1),//Punto mas alto del looping
-            new THREE.Vector3(12, 18, 0),
-            new THREE.Vector3(11, 15, 0),//Punto mas a la izquierda del looping
+            new THREE.Vector3(19, 15, 3), // Punto más a la derecha del looping
+            new THREE.Vector3(18, 17.75, 2),
+            new THREE.Vector3(15, 19, 1), // Punto más alto del looping
+            new THREE.Vector3(12, 17.75, 0),
+            new THREE.Vector3(11, 15, 0), // Punto más a la izquierda del looping
             new THREE.Vector3(12, 12, 0),
-            new THREE.Vector3(15, 10, 0),//Fin looping e inicio recta
+            new THREE.Vector3(15, 10, 0),  // Fin looping e inicio recta
             new THREE.Vector3(20, 10, 0),//Fin recta e inicio curva
             new THREE.Vector3(23, 10, 2),
             new THREE.Vector3(24, 10, 5),//Mitad de la curva   

@@ -13,7 +13,7 @@ class MyMoneda extends THREE.Object3D {
     var ojo1 = new THREE.SphereGeometry(0.2,32,32);
     var ojo2 = ojo1.clone();
     var nariz = new THREE.SphereGeometry(0.2,32,32);
-    var bigote1i = new THREE.CylinderGeometry(0.015, 0.015, 1.25, 32);
+    var bigote1i = new THREE.CylinderGeometry(0.01, 0.01, 1.25, 32);
     var bigote2i = bigote1i.clone();
     var bigote3i = bigote1i.clone();        
     var bigote1d = bigote1i.clone();
@@ -135,8 +135,7 @@ class MyMoneda extends THREE.Object3D {
     moneda.add(cara2);
 
     
-    moneda.scale.set(0.1,0.1,0.1);
-
+    moneda.scale.set(0.25,0.25,0.25);
     // Añadir el grupo al objeto 3D
     this.add(moneda);
       
