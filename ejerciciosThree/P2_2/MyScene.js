@@ -26,13 +26,16 @@ class MyScene extends THREE.Scene {
     // Lo primero, creamos e inicializamos los distintos elementos que usaremos
     this.renderer = this.createRenderer(myCanvas);
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('images/cielo1.jpg', () => {
+    const texture = loader.load('images/cielo3.jpg', () => {
       // Actualizar el renderizador una vez que la textura se haya cargado
       this.renderer.render(this);
     });
 
     // Establecer la textura como fondo
     this.background = texture;
+    this.background.wrapS = THREE.RepeatWrapping;
+    this.background.wrapT = THREE.RepeatWrapping;
+    this.background.repeat.set(1, 1); // Ajusta estos valores según el tamaño de tu imagen
     this.gui = this.createGUI ();
     this.initStats();
     this.createLights ();
@@ -51,6 +54,7 @@ class MyScene extends THREE.Scene {
     
     // Crear la curva del   
     this.curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(4, 0, 0),//Inicio recta
       new THREE.Vector3(5, 0, 0),//Fin curva e inicio curva
       new THREE.Vector3(7.5, 2, 0),
       new THREE.Vector3(10, 2.7, 0),//Punto mas alto de la curva
@@ -62,11 +66,25 @@ class MyScene extends THREE.Scene {
       new THREE.Vector3(23, -2, 13),//Fin recta e inicio curva
       new THREE.Vector3(15, 0, 15),
       new THREE.Vector3(10, 0, 15),//Inicio espiral
-      new THREE.Vector3(7, 0.5, 13), new THREE.Vector3(6, 1, 10), new THREE.Vector3(7, 1.5, 7), new THREE.Vector3(10, 2, 6), new THREE.Vector3(13, 2.5, 7), new THREE.Vector3(14, 3, 10), new THREE.Vector3(13, 3.5, 13),
+      new THREE.Vector3(7, 0.5, 13),
+      new THREE.Vector3(6, 1, 10),
+      new THREE.Vector3(7, 1.5, 7),
+      new THREE.Vector3(10, 2, 6),
+      new THREE.Vector3(13, 2.5, 7),
+      new THREE.Vector3(14, 3, 10),
+      new THREE.Vector3(13, 3.5, 13),
       new THREE.Vector3(10, 4, 14),//Segunda vuelta
-      new THREE.Vector3(7, 4.5, 13), new THREE.Vector3(6, 5, 10), new THREE.Vector3(7, 5.5, 7), new THREE.Vector3(10, 6, 6), new THREE.Vector3(13, 6.5, 7), new THREE.Vector3(14, 7, 10), new THREE.Vector3(13, 7.5, 13),
+      new THREE.Vector3(7, 4.5, 13),
+      new THREE.Vector3(6, 5, 10),
+      new THREE.Vector3(7, 5.5, 7),
+      new THREE.Vector3(10, 6, 6),
+      new THREE.Vector3(13, 6.5, 7),
+      new THREE.Vector3(14, 7, 10),
+      new THREE.Vector3(13, 7.5, 13),
       new THREE.Vector3(10, 8, 14),//Tercera vuelta
-      new THREE.Vector3(7, 8.5, 13), new THREE.Vector3(6, 9, 10), new THREE.Vector3(7, 9.5, 7),
+      new THREE.Vector3(7, 8.5, 13),
+      new THREE.Vector3(6, 9, 10),
+      new THREE.Vector3(7, 9.5, 7),
       new THREE.Vector3(10, 10, 5),//Fin espiral 
       new THREE.Vector3(15, 10, 5), // Inicio looping
       new THREE.Vector3(18, 12, 4),
@@ -82,8 +100,18 @@ class MyScene extends THREE.Scene {
       new THREE.Vector3(24, 10, 5),//Mitad de la curva   
       new THREE.Vector3(23, 10, 8),
       new THREE.Vector3(20, 10, 10),//Fin curva e inicio recta
-      new THREE.Vector3(12, 10, 10), new THREE.Vector3(10, 0, 10), new THREE.Vector3(8, -3, 10), new THREE.Vector3(5, -4, 10), new THREE.Vector3(2, -3, 8), new THREE.Vector3(1, 0, 5), new THREE.Vector3(2, 0, 2),
-      new THREE.Vector3(5, 0, 0),//Fin circuito
+      new THREE.Vector3(12, 10, 10),
+      new THREE.Vector3(10, 0, 10),
+      new THREE.Vector3(8, -3, 10),
+      new THREE.Vector3(5, -4, 10),
+      new THREE.Vector3(2, -3, 10),//Fin recta e inicio curva
+      new THREE.Vector3(0, 0, 10),
+      new THREE.Vector3(-2, 0, 8),
+      new THREE.Vector3(-3, 0, 5),
+      new THREE.Vector3(-2, 0, 2),
+      new THREE.Vector3(0, 0, 0),//Fin recta e inicio curva
+      new THREE.Vector3(4, 0, 0),
+
     ]);
 
     this.models = [];
@@ -178,13 +206,16 @@ class MyScene extends THREE.Scene {
     document.addEventListener('keydown', (event) => {
       if (event.key === 'a'||event.key === 'A') {
           // Marcar la tecla izquierda como no presionada
-          this.rotationZ -= 0.1;      
+          this.rotationZ -= 0.1;   
+          this.background.offset.x -= 0.01;   
       } else if (event.key === 'd'|| event.key === 'D'){
           // Marcar la tecla derecha como no presionada
           this.rotationZ += 0.1;
+          this.background.offset.x += 0.01;
       }
       if (event.key === ' ') { //Espacio para alternar la cámara
         this.camara_gato = !this.camara_gato;
+        
       }
 
     });

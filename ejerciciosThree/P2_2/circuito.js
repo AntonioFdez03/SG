@@ -7,6 +7,7 @@ class MyCircuito extends THREE.Object3D {
         // Crear una geometría de tubo con la curva personalizada
         const curve = new THREE.CatmullRomCurve3([
             //new THREE.Vector3(0, 0, 0),//Inicio recta
+            new THREE.Vector3(4, 0, 0),//Inicio recta
             new THREE.Vector3(5, 0, 0),//Fin curva e inicio curva
             new THREE.Vector3(7.5, 2, 0),
             new THREE.Vector3(10, 2.7, 0),//Punto mas alto de la curva
@@ -56,12 +57,13 @@ class MyCircuito extends THREE.Object3D {
             new THREE.Vector3(10, 0, 10),
             new THREE.Vector3(8, -3, 10),
             new THREE.Vector3(5, -4, 10),
-            new THREE.Vector3(2, -3, 8),
-            new THREE.Vector3(1, 0, 5),
-            new THREE.Vector3(2, 0, 2),
-            new THREE.Vector3(5, 0, 0),//Fin circuito
-
-            
+            new THREE.Vector3(2, -3, 10),//Fin recta e inicio curva
+            new THREE.Vector3(0, 0, 10),
+            new THREE.Vector3(-2, 0, 8),
+            new THREE.Vector3(-3, 0, 5),
+            new THREE.Vector3(-2, 0, 2),
+            new THREE.Vector3(0, 0, 0),//Fin recta e inicio curva
+            new THREE.Vector3(4, 0, 0)    
             
         ]);
         
@@ -71,10 +73,6 @@ class MyCircuito extends THREE.Object3D {
         // Cargar la textura
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('images/tronco1.jpg');
-
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1, 10); // Ajusta estos valores según sea necesario
 
         // Crear un material con la textura
         const material = new THREE.MeshPhysicalMaterial({ map: texture, transparent: false, roughness: 1, clearcoat: 1 });
