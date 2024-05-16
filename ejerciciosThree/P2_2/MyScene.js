@@ -25,6 +25,14 @@ class MyScene extends THREE.Scene {
     
     // Lo primero, creamos e inicializamos los distintos elementos que usaremos
     this.renderer = this.createRenderer(myCanvas);
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('images/cielo1.jpg', () => {
+      // Actualizar el renderizador una vez que la textura se haya cargado
+      this.renderer.render(this);
+    });
+
+    // Establecer la textura como fondo
+    this.background = texture;
     this.gui = this.createGUI ();
     this.initStats();
     this.createLights ();

@@ -65,16 +65,25 @@ class MyCircuito extends THREE.Object3D {
             
         ]);
         
-        
          // El segundo parámetro en false hace que la curva sea abierta
         const geometry = new THREE.TubeGeometry(curve, 1000, 0.5, 64, true);
 
-        // Crear un material
-        const material = new THREE.MeshNormalMaterial();
+        // Cargar la textura
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('images/tronco1.jpg');
+
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1, 10); // Ajusta estos valores según sea necesario
+
+        // Crear un material con la textura
+        const material = new THREE.MeshPhysicalMaterial({ map: texture, transparent: false, roughness: 1, clearcoat: 1 });
 
         // Crear una malla y añadirla al objeto 3D
         const circuito = new THREE.Mesh(geometry, material);
         
+        //circuito.receiveShadow = true;
+        //circuito.castShadow = true;
         this.add(circuito);
 
         this.createGUI(gui,titleGui);
