@@ -1,4 +1,5 @@
 import * as THREE from '../libs/three.module.js'
+import { MyTunel } from './tunel.js'
 
 class MyCircuito extends THREE.Object3D {
     constructor(gui,titleGui) {
@@ -73,16 +74,28 @@ class MyCircuito extends THREE.Object3D {
         // Cargar la textura
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('images/tronco1.jpg');
+        // Ajustar las coordenadas de mapeo de la textura para repetirla
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(50, 50); // Ajusta estos valores según sea necesario
 
         // Crear un material con la textura
         const material = new THREE.MeshPhysicalMaterial({ map: texture, transparent: false, roughness: 1, clearcoat: 1 });
-
+        // material = new THREE.MeshBasicMaterial({});
         // Crear una malla y añadirla al objeto 3D
         const circuito = new THREE.Mesh(geometry, material);
         
-        //circuito.receiveShadow = true;
-        //circuito.castShadow = true;
         this.add(circuito);
+
+        const tunel = new MyTunel();
+
+        tunel.position.set(17.5,10,10);
+        tunel.rotateZ(Math.PI/2);
+        tunel.rotateZ(-0.07);
+        tunel.rotateY(-Math.PI/2);
+
+        
+        this.add(tunel);
 
         this.createGUI(gui,titleGui);
     }
