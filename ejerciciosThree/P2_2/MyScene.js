@@ -319,6 +319,21 @@ class MyScene extends THREE.Scene {
     // Añade un control para 'puntos' y guarda la referencia en this.puntosControl
     this.puntosControl = puntosFolder.add (this.guiControls, 'puntos').listen()
       .name('Puntos: ');
+
+
+      var purpleLightFolder = gui.addFolder('Purple Light');
+      this.guiControls.purpleLightPower = 500.0;
+      purpleLightFolder.add(this.guiControls, 'purpleLightPower', 0, 1000, 20)
+        .name('Potencia: ')
+        .onChange((value) => this.setPurpleLightPower(value));
+    
+      // Crea una nueva sección para la luz verde
+      var greenLightFolder = gui.addFolder('Green Light');
+      this.guiControls.greenLightPower = 500.0;
+      greenLightFolder.add(this.guiControls, 'greenLightPower', 0, 1000, 20)
+        .name('Potencia: ')
+        .onChange((value) => this.setGreenLightPower(value));
+    
     
     return gui;
 }
@@ -332,10 +347,31 @@ class MyScene extends THREE.Scene {
     this.pointLight.power = this.guiControls.lightPower;
     this.pointLight.position.set( 2, 3, 1 );
     this.add (this.pointLight);
+
+    // Crea una luz puntual morada
+    this.purpleLight = new THREE.PointLight(0x800080); // Color morado en hexadecimal
+    this.purpleLight.intensity = this.guiControls.purpleLightPower;
+    this.purpleLight.position.set(0, 0, 0); // Posición central
+    this.add(this.purpleLight);
+
+    // Crea una luz puntual verde
+    this.greenLight = new THREE.PointLight(0x008000); // Color verde en hexadecimal
+    this.greenLight.intensity = this.guiControls.greenLightPower;
+    this.greenLight.position.set(0, 0, 0); // Posición central
+    this.add(this.greenLight);
+  
   }
   
   setLightPower (valor) {
     this.pointLight.power = valor;
+  }
+
+  setPurpleLightPower (valor) {
+    this.purpleLight.intensity = valor;
+  }
+  
+  setGreenLightPower (valor) {
+    this.greenLight.intensity = valor;
   }
 
   setAmbientIntensity (valor) {
