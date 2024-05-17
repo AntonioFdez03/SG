@@ -19,10 +19,12 @@ class MyScene extends THREE.Scene {
     });
 
     // Establecer la textura como fondo
-    this.background = texture;
+    /*this.background = texture;
     this.background.wrapS = THREE.RepeatWrapping;
     this.background.wrapT = THREE.RepeatWrapping;
+    
     this.background.repeat.set(1, 1); // Ajusta estos valores según el tamaño de tu imagen
+    */
     this.gui = this.createGUI ();
     this.initStats();
     this.createLights ();
@@ -87,6 +89,7 @@ class MyScene extends THREE.Scene {
     }
 
     // Se crea una sección para los controles de esta clase
+    /*
     var folder = gui.addFolder ('Luz y Ejes');
     // Se le añade un control para la potencia de la luz puntual
     folder.add (this.guiControls, 'lightPower', 0, 1000, 20)
@@ -115,7 +118,7 @@ class MyScene extends THREE.Scene {
         .name('Potencia: ')
         .onChange((value) => this.setGreenLightPower(value));
     
-    
+    */
     return gui;
 }
   createLights () {
@@ -129,6 +132,7 @@ class MyScene extends THREE.Scene {
     this.pointLight.position.set( 2, 3, 1 );
     this.add (this.pointLight);
 
+    /*
     // Crea una luz puntual morada
     this.purpleLight = new THREE.PointLight(0x800080); // Color morado en hexadecimal
     this.purpleLight.intensity = this.guiControls.purpleLightPower;
@@ -167,6 +171,7 @@ class MyScene extends THREE.Scene {
 
     // Inicia la animación
     this.lightInterval = setInterval(this.toggleLights.bind(this), 1000); // Cambia el estado de las luces cada segundo
+    */
   }
   
   setLightPower (valor) {

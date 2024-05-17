@@ -9,7 +9,7 @@ import { MyRaton } from './raton.js'
 class MyJuego extends THREE.Object3D {
     constructor(gui,titleGui) {
         super();
-            
+        this.i = 0;
         this.createGUI(gui,titleGui);
         this.axis = new THREE.AxesHelper (2);
         this.add (this.axis);
@@ -317,10 +317,13 @@ class MyJuego extends THREE.Object3D {
         }
 
         update () {
+
             this.AnimacionGato();
             this.Colisiones();
             this.AnimacionRaton();
             this.AnimacionMoneda();
+        
+
         }
 }
 

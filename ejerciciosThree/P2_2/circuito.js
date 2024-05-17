@@ -1,3 +1,4 @@
+import { color } from '../libs/dat.gui.module.js';
 import * as THREE from '../libs/three.module.js'
 import { MyTunel } from './tunel.js'
 
@@ -80,8 +81,12 @@ class MyCircuito extends THREE.Object3D {
         texture.repeat.set(50, 50); // Ajusta estos valores según sea necesario
 
         // Crear un material con la textura
-        const material = new THREE.MeshPhysicalMaterial({ map: texture, transparent: false, roughness: 1, clearcoat: 1 });
-        // material = new THREE.MeshBasicMaterial({});
+        var material = new THREE.MeshPhysicalMaterial({ map: texture, transparent: false, roughness: 1, clearcoat: 1});
+
+        material.bumpMap = texture;
+        material.bumpScale = 5;
+
+        //const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
         // Crear una malla y añadirla al objeto 3D
         const circuito = new THREE.Mesh(geometry, material);
         
@@ -95,7 +100,7 @@ class MyCircuito extends THREE.Object3D {
         tunel.rotateY(-Math.PI/2);
 
         
-        this.add(tunel);
+        //this.add(tunel);
 
         this.createGUI(gui,titleGui);
     }
