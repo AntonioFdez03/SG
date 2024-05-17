@@ -360,23 +360,32 @@ class MyScene extends THREE.Scene {
     this.greenLight.position.set(0, 0, 0); // Posición central
     this.add(this.greenLight);
 
-            
-     // Crea una luz puntual verde
+                
+    // Crea una luz puntual verde
     this.tunelLight = new THREE.SpotLight(0xFF0000); // Color verde en hexadecimal
-    this.tunelLight.intensity = this.guiControls.greenLightPower;
     this.tunelLight.position.set(19, 11.8, 10); // Posición central
     this.tunelLight.target.position.set(1.5, 10, 10);
     this.tunelLight.distance = 5;
     this.add(this.tunelLight);
-    
 
     this.tunelLight2 = new THREE.SpotLight(0xFF0000); // Color verde en hexadecimal
-    this.tunelLight2.intensity = this.guiControls.greenLightPower;
     this.tunelLight2.position.set(20, 11.8, 10); // Posición central
     this.tunelLight2.target.position.set(15.5, 10, 10);
     this.tunelLight2.distance = 5;
     this.add(this.tunelLight2);
-  
+
+    // Variables para controlar la animación
+    this.lightOn = true; // Estado inicial de las luces
+
+    // Función para encender y apagar las luces
+    this.toggleLights = function () {
+        this.lightOn = !this.lightOn;
+        this.tunelLight.intensity = this.lightOn ? 500 : 0;
+        this.tunelLight2.intensity = this.lightOn ? 500 : 0;
+    };
+
+    // Inicia la animación
+    this.lightInterval = setInterval(this.toggleLights.bind(this), 1000); // Cambia el estado de las luces cada segundo
   }
   
   setLightPower (valor) {
